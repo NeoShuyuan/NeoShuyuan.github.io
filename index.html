@@ -1,141 +1,137 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>私塾AI融合实验站</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NeoShuyuan 私塾 AI</title>
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      overflow-x: hidden;
-      font-family: serif;
+      font-family: 'Noto Serif SC', serif;
+      color: #333;
+      background-color: #fff;
     }
+
     canvas {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
       z-index: -1;
+    }
+
+    nav {
+      text-align: center;
+      padding: 1em;
+      background: rgba(255,255,255,0.9);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav a {
+      margin: 1em;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    section {
+      padding: 3em 10%;
+      background-color: rgba(255,255,255,0.95);
+    }
+
+    h1 {
+      font-size: 2.2em;
+      text-align: center;
+      margin-bottom: 1em;
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.8;
     }
   </style>
 </head>
-<body class="text-gray-800">
-  <!-- Canvas for ink animation -->
-  <canvas id="inkCanvas"></canvas>
+<body>
 
-  <!-- Navigation bar -->
-  <header class="bg-white bg-opacity-60 backdrop-blur-sm shadow-md fixed w-full z-10">
-    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
-      <h1 class="text-2xl font-bold">NeoShuyuan 私塾</h1>
-      <nav class="space-x-4 text-lg">
-        <a href="#ai" class="hover:underline">AI解题工具</a>
-        <a href="#library" class="hover:underline">古籍图书馆</a>
-        <a href="#learning" class="hover:underline">学习中心</a>
-        <a href="#culture" class="hover:underline">文化实验室</a>
-      </nav>
-    </div>
-  </header>
+<canvas id="ink"></canvas>
 
-  <!-- Hero Section -->
-  <section class="h-screen flex flex-col justify-center items-center text-center px-4">
-    <h2 class="text-4xl font-bold mb-6 text-gray-800">欢迎来到 NeoShuyuan 私塾 AI</h2>
-    <p class="max-w-2xl text-xl text-gray-700">
-      传统文化 ✕ 人工智能，探索汉字与数学、技术与诗意的融合。
-    </p>
-  </section>
+<nav>
+  <a href="#ai-tools">AI解题工具 / AI Tools</a>
+  <a href="#library">古籍图书馆 / Classics</a>
+  <a href="#learning">学习中心 / Learning</a>
+  <a href="#culture">文化实验室 / Culture</a>
+</nav>
 
-  <!-- Introduction -->
-  <section class="bg-white bg-opacity-80 py-12 px-8" id="about">
-    <div class="max-w-4xl mx-auto text-lg leading-relaxed">
-      <h3 class="text-2xl font-semibold mb-4">关于我</h3>
-      <p class="mb-4">
-        我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。
-        老师教我们通过汉字的演变理解古人的思维方式，比如"日"字从太阳的象形而来，"明"由"日"和"月"组合表示光亮。
-      </p>
-      <p class="mb-4">
-        后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。
-        这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。
-      </p>
-      <p class="mb-4">
-        我正在开发一系列工具：
-        <ul class="list-disc ml-6 mt-2">
-          <li>将《九章算术》的文言题目转换为现代数学表达式</li>
-          <li>用可视化方式展示汉字演变与数学符号的关联</li>
-          <li>为古籍中的数学问题制作交互式解题动画</li>
-        </ul>
-      </p>
-      <p>
-        这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。
-      </p>
-    </div>
-  </section>
+<section>
+  <h1>欢迎来到 NeoShuyuan · 私塾AI实验</h1>
+  <p>
+    我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。
+    老师教我们通过汉字的演变理解古人的思维方式，比如"日"字从太阳的象形而来，"明"由"日"和"月"组合表示光亮。
+    <br><br>
+    后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。
+    <br><br>
+    现在，我正在开发一系列工具：
+    <ul>
+      <li>将《九章算术》的文言题目转换为现代数学表达式</li>
+      <li>用可视化方式展示汉字演变与数学符号的关联</li>
+      <li>为古籍中的数学问题制作交互式解题动画</li>
+    </ul>
+    这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。
+    <br><br>
+    In this project, I aim to bridge traditional Chinese scholarship with modern technology. Let’s explore how characters, logic, and ancient algorithms come alive again through code and visualization.
+  </p>
+</section>
 
-  <!-- Function Sections -->
-  <section class="py-16 px-6" id="ai">
-    <h2 class="text-2xl font-bold mb-4">AI 解题工具</h2>
-    <p>核心功能：文言输入解题 / 手写识别批改<br>辅助功能：实时动画展示 / 步骤讲解</p>
-  </section>
+<!-- 这里可以加你四大板块跳转锚点 -->
 
-  <section class="py-16 px-6 bg-gray-50" id="library">
-    <h2 class="text-2xl font-bold mb-4">古籍图书馆</h2>
-    <p>核心功能：《九章算术》《孙子算经》对照阅读<br>辅助功能：关键词算法图解 / 译文并列</p>
-  </section>
+<script>
+  // 简单水墨动画（墨滴扩散效果）
+  const canvas = document.getElementById("ink");
+  const ctx = canvas.getContext("2d");
 
-  <section class="py-16 px-6" id="learning">
-    <h2 class="text-2xl font-bold mb-4">学习中心</h2>
-    <p>核心功能：错题本 / 能力图谱<br>辅助功能：学习进度可视化 / 按知识点归类</p>
-  </section>
+  let drops = [];
 
-  <section class="py-16 px-6 bg-gray-50" id="culture">
-    <h2 class="text-2xl font-bold mb-4">文化实验室</h2>
-    <p>核心功能：汉字数学密码 / 古今算法对比<br>辅助功能：互动式“算”字演变 / 时间轴图解</p>
-  </section>
-
-  <footer class="text-center py-6 text-sm text-gray-500">
-    © 2025 NeoShuyuan. All rights reserved.
-  </footer>
-
-  <!-- Ink Animation Script -->
-  <script>
-    const canvas = document.getElementById('inkCanvas');
-    const ctx = canvas.getContext('2d');
+  function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+  }
 
-    let drops = [];
+  function dropInk() {
+    drops.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      radius: 0,
+      opacity: 1
+    });
+  }
 
-    function createDrop() {
-      return {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height / 2,
-        r: 0,
-        max: 60 + Math.random() * 30,
-        alpha: 0.5 + Math.random() * 0.5
-      };
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < drops.length; i++) {
+      let d = drops[i];
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(0, 0, 0, ${d.opacity})`;
+      ctx.fill();
+      d.radius += 1;
+      d.opacity -= 0.005;
     }
 
-    function draw() {
-      ctx.fillStyle = 'rgba(255,255,255,0.06)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      drops.forEach((d, i) => {
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,0,0,${d.alpha})`;
-        ctx.fill();
-        d.r += 0.4;
-        if (d.r > d.max) drops[i] = createDrop();
-      });
-    }
+    drops = drops.filter(d => d.opacity > 0);
 
-    function animate() {
-      draw();
-      requestAnimationFrame(animate);
-    }
+    requestAnimationFrame(animate);
+  }
 
-    for (let i = 0; i < 15; i++) drops.push(createDrop());
-    animate();
-  </script>
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+  setInterval(dropInk, 800);
+  animate();
+</script>
+
 </body>
 </html>
