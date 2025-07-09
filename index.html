@@ -1,79 +1,159 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>私塾AI - SishuAI</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title id="page-title">私塾AI</title>
   <style>
     body {
-      margin: 0;
-      font-family: "KaiTi", "楷体", serif;
-      background-image: url('https://img.zcool.cn/community/01fbd95ceac4f9a801203d22969385.jpg');
-      background-size: cover;
-      background-position: center;
-      color: white;
-      text-align: center;
-      padding: 100px 20px;
-    }
-    .lang-btn {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      padding: 10px 20px;
-      border: 2px solid white;
-      background-color: rgba(0, 0, 0, 0.6);
-      color: white;
-      font-size: 1em;
-      cursor: pointer;
-      border-radius: 6px;
+      font-family: sans-serif;
+      margin: 30px;
+      line-height: 1.8;
     }
     h1 {
-      font-size: 3em;
-      margin-bottom: 0.5em;
+      font-size: 2em;
+      color: #333;
     }
-    p {
-      font-size: 1.5em;
+    h2 {
+      margin-top: 2em;
+      color: #444;
     }
-    .btn {
-      margin-top: 40px;
-      padding: 15px 30px;
-      font-size: 1.2em;
-      background-color: rgba(255, 255, 255, 0.1);
-      border: 2px solid white;
-      border-radius: 8px;
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 1em;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 16px;
+      font-size: 14px;
       cursor: pointer;
-      color: white;
-    }
-    .btn:hover {
-      background-color: rgba(255, 255, 255, 0.3);
     }
   </style>
 </head>
 <body>
-  <button class="lang-btn" onclick="switchLanguage()">English</button>
+  <h1 id="title">欢迎来到私塾AI</h1>
+  <p id="desc">
+    我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。老师教我们通过汉字的演变理解古人的思维方式，比如"日"字从太阳的象形而来，"明"由"日"和"月"组合表示光亮。<br><br>
+    后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。<br><br>
+    现在，我正在开发一系列工具：<br>
+    ✓ 将《九章算术》的文言题目转换为现代数学表达式<br>
+    ✓ 用可视化方式展示汉字演变与数学符号的关联<br>
+    ✓ 为古籍中的数学问题制作交互式解题动画<br><br>
+    这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。<br><br>
+    在这里，你可以看到：<br>
+    ✓ 300+道古算题的现代解析<br>
+    ✓ 汉字与数学符号的对照词典<br>
+    ✓ 文言文学习辅助工具<br><br>
+    让我们一起探索传统文化与现代科技的融合之美。
+  </p>
 
-  <h1 id="title">欢迎来到 私塾AI</h1>
-  <p id="desc">融合传统智慧与人工智能的教学平台</p>
-  <audio controls autoplay>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_b80d68b527.mp3" type="audio/mp3">
-    您的浏览器不支持音频播放。
-  </audio>
-  <br />
-  <button class="btn" id="mainBtn" onclick="alert('功能开发中 / Feature coming soon')">进入文言文AI答题区</button>
+  <h2>📌 平台核心板块概览</h2>
+  <table>
+    <tr>
+      <th>板块</th>
+      <th>子菜单/功能</th>
+      <th>交互效果</th>
+    </tr>
+    <tr>
+      <td>AI解题工具</td>
+      <td>- 文言文输入框<br>- 手写板（拍照/涂鸦）</td>
+      <td>实时生成解题步骤+动画<br>OCR识别+批改</td>
+    </tr>
+    <tr>
+      <td>古籍图书馆</td>
+      <td>- 《九章算术》全文<br>- 《孙子算经》精选</td>
+      <td>原文/译文对照阅读<br>关键算法图解</td>
+    </tr>
+    <tr>
+      <td>学习中心</td>
+      <td>- 错题本<br>- 能力图谱</td>
+      <td>按知识点归类错题<br>可视化学习进度</td>
+    </tr>
+    <tr>
+      <td>文化实验室</td>
+      <td>- 汉字数学学密码<br>- 古今算法对比</td>
+      <td>交互式解析「算」字演变<br>侧边栏滑动对比</td>
+    </tr>
+  </table>
+
+  <h2>🎬 英雄区（主视觉）</h2>
+  <ul>
+    <li><strong>动态演示窗：</strong>点击任意示例题（如“今有圆田周三十步”）→ 跳转完整解题页</li>
+    <li><strong>快速入口按钮：</strong>
+      <ul>
+        <li>🔍 开始探索 → 古籍图书馆</li>
+        <li>🧠 立即解题 → AI工具页</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>🧩 功能卡片区</h2>
+  <table>
+    <tr>
+      <th>卡片</th>
+      <th>点击后跳转</th>
+      <th>悬停效果</th>
+    </tr>
+    <tr>
+      <td>AI私塾先生</td>
+      <td>虚拟助手聊天页</td>
+      <td>播放古琴音效</td>
+    </tr>
+    <tr>
+      <td>3D数学博物馆</td>
+      <td>牵合方盖等模型互动页</td>
+      <td>预览模型旋转</td>
+    </tr>
+    <tr>
+      <td>我的学习档案</td>
+      <td>个人数据仪表盘</td>
+      <td>显示近期活跃度</td>
+    </tr>
+  </table>
+
+  <h2>🕰️ 文化时间轴</h2>
+  <ul>
+    <li><strong>公元前100年</strong> → 弹出《九章算术》历史典故</li>
+    <li><strong>2024年</strong> → 播放项目研发纪录片片段</li>
+  </ul>
+
+  <h2>📱 移动端适配</h2>
+  <ul>
+    <li><strong>导航菜单</strong> → 折叠为「三横线」图标</li>
+    <li><strong>功能卡片</strong> → 改为垂直滑动列表</li>
+    <li><strong>时间轴</strong> → 左右滑动浏览</li>
+  </ul>
+
+  <button class="lang-btn" onclick="switchLanguage()">English</button>
 
   <script>
     let currentLang = 'zh';
     const texts = {
       zh: {
-        title: '欢迎来到 私塾AI',
-        desc: '融合传统智慧与人工智能的教学平台',
-        btn: '进入文言文AI答题区',
+        title: '欢迎来到私塾AI',
+        desc: document.getElementById('desc').innerHTML,
         switchLabel: 'English'
       },
       en: {
         title: 'Welcome to SishuAI',
-        desc: 'A platform combining classical wisdom with artificial intelligence',
-        btn: 'Enter Classical Chinese AI Answer Zone',
+        desc: `I was raised in a traditional Sishu (private Confucian school), never attending regular elementary school. My daily lessons involved reciting classics like the "Three Character Classic" and "Thousand Character Essay", and copying oracle bone and bronze script with brush and ink. Our teacher guided us to understand ancient thought through the evolution of Chinese characters—for example, how "日" (sun) derived from a sun pictograph, and "明" (bright) combined "sun" and "moon".<br><br>
+        Later, when I encountered programming, I was amazed by the parallel between the terse logic of classical Chinese and the structure of code. This inspired me to explore how technology could interpret ancient texts—especially mathematics.<br><br>
+        Now, I’m developing tools to:<br>
+        ✓ Convert math problems in "The Nine Chapters" into modern equations<br>
+        ✓ Visualize links between character evolution and math symbols<br>
+        ✓ Animate step-by-step solutions for ancient math questions<br><br>
+        This is not to replace tradition—but to build a bridge so more people can appreciate these cultural treasures.<br><br>
+        You’ll find here:<br>
+        ✓ Modern explanations for 300+ classic math problems<br>
+        ✓ A dictionary connecting Chinese characters and math symbols<br>
+        ✓ Tools for learning Classical Chinese<br><br>
+        Let’s explore the beauty where tradition meets technology.`,
         switchLabel: '中文'
       }
     };
@@ -81,8 +161,7 @@
     function switchLanguage() {
       currentLang = currentLang === 'zh' ? 'en' : 'zh';
       document.getElementById('title').innerText = texts[currentLang].title;
-      document.getElementById('desc').innerText = texts[currentLang].desc;
-      document.getElementById('mainBtn').innerText = texts[currentLang].btn;
+      document.getElementById('desc').innerHTML = texts[currentLang].desc;
       document.querySelector('.lang-btn').innerText = texts[currentLang].switchLabel;
     }
   </script>
