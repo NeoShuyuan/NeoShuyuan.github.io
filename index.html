@@ -9,8 +9,8 @@
       margin: 0;
       padding: 0;
       font-family: 'Noto Serif SC', serif;
-      color: #333;
       background-color: #F8F4E9;
+      color: #333;
     }
     canvas {
       position: fixed;
@@ -34,6 +34,22 @@
       font-weight: bold;
       font-size: 18px;
     }
+    #language-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #9C4A1A;
+      color: white;
+      border: none;
+      padding: 0.5em 1em;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 101;
+    }
+    #music-controls {
+      text-align: center;
+      margin-top: 1em;
+    }
     section {
       padding: 3em 10%;
       background-color: rgba(255,255,255,0.9);
@@ -54,11 +70,14 @@
     li {
       margin-bottom: 0.6em;
     }
+    .en { display: none; }
   </style>
 </head>
 <body>
 
 <canvas id="ink"></canvas>
+
+<button id="language-toggle">English</button>
 
 <nav>
   <a href="ai-tools.html">AI解题工具 / AI Tools</a>
@@ -68,27 +87,38 @@
 </nav>
 
 <section>
-  <h1>欢迎 Welcome to NeoShuyuan · 私塾AI实验</h1>
-  <p>
+  <h1 class="zh">欢迎来到 NeoShuyuan · 私塾AI实验</h1>
+  <h1 class="en">Welcome to NeoShuyuan · Classical AI Lab</h1>
+
+  <p class="zh">
     我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。<br>
-    <i>I studied at a traditional Chinese academy as a child, without attending a regular primary school. My daily lessons included reciting the *Three Character Classic* and the *Thousand Character Essay*, and copying oracle bone and bronze inscriptions with a brush.</i>
-    <br><br>
-    老师教我们通过汉字的演变理解古人的思维方式，比如"日"字从太阳的象形而来，"明"由"日"和"月"组合表示光亮。<br>
-    <i>We were taught to understand how ancient people thought through the evolution of Chinese characters. For example, the character "日" originated as a pictograph of the sun, and "明" (bright) combines "日" (sun) and "月" (moon).</i>
-    <br><br>
-    后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。<br>
-    <i>Later, when I encountered computers and programming, I was amazed to find a strange similarity between the compact structure of classical Chinese and programming languages. This discovery inspired me to use technology to interpret classical texts, especially ancient mathematical works.</i>
-    <br><br>
-    现在，我开发一系列工具：<br>
-    <i>I've developed a series of tools:</i>
+    老师教我们通过汉字的演变理解古人的思维方式，比如"日"字从太阳的象形而来，"明"由"日"和"月"组合表示光亮。<br><br>
+    后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。<br><br>
+    现在，我正在开发一系列工具：
     <ul>
-      <li>将《九章算术》的文言题目转换为现代数学表达式<br><i>Converting classical math problems from *The Nine Chapters* into modern math notation</i></li>
-      <li>用可视化方式展示汉字演变与数学符号的关联<br><i>Visualizing the connection between character evolution and math symbols</i></li>
-      <li>为古籍中的数学问题制作交互式解题动画<br><i>Creating interactive animated solutions for ancient math problems</i></li>
+      <li>将《九章算术》的文言题目转换为现代数学表达式</li>
+      <li>用可视化方式展示汉字演变与数学符号的关联</li>
+      <li>为古籍中的数学问题制作交互式解题动画</li>
     </ul>
-    这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。<br>
-    <i>These projects are not meant to replace traditional learning, but to build a bridge that makes this cultural treasure more accessible.</i>
+    这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。
   </p>
+  <p class="en">
+    I studied at a traditional Chinese academy without attending regular primary school. My daily lessons included reciting the *Three Character Classic* and copying oracle bone scripts.<br><br>
+    I was amazed to discover the structure of classical Chinese is surprisingly similar to programming syntax. This inspired me to use technology to explore classical works, especially ancient mathematics.<br><br>
+    I’m now developing tools to:
+    <ul>
+      <li>Convert classical problems from *The Nine Chapters* into modern math notation</li>
+      <li>Visualize the evolution of Chinese characters and their links to math symbols</li>
+      <li>Create animated step-by-step solutions for ancient math texts</li>
+    </ul>
+    These tools aim not to replace tradition, but to build bridges that make heritage more accessible.
+  </p>
+
+  <div id="music-controls">
+    <button onclick="document.getElementById('guqin').play()">🎵 播放古琴</button>
+    <button onclick="document.getElementById('guqin').pause()">⏸️ 暂停</button>
+    <audio id="guqin" src="https://cdn.pixabay.com/download/audio/2022/08/21/audio_99b7a7b9e5.mp3" preload="auto"></audio>
+  </div>
 </section>
 
 <script>
@@ -109,8 +139,7 @@
   }
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < drops.length; i++) {
-      let d = drops[i];
+    for (let d of drops) {
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(0, 0, 0, ${d.opacity})`;
@@ -125,6 +154,14 @@
   window.addEventListener("resize", resizeCanvas);
   setInterval(dropInk, 800);
   animate();
+
+  // 语言切换
+  const toggleBtn = document.getElementById("language-toggle");
+  toggleBtn.addEventListener("click", () => {
+    document.querySelectorAll('.zh').forEach(el => el.style.display = el.style.display === 'none' ? '' : 'none');
+    document.querySelectorAll('.en').forEach(el => el.style.display = el.style.display === 'none' ? '' : 'none');
+    toggleBtn.textContent = toggleBtn.textContent === 'English' ? '中文' : 'English';
+  });
 </script>
 
 </body>
