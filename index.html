@@ -1,169 +1,141 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title id="page-title">私塾AI</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>私塾AI融合实验站</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 30px;
-      line-height: 1.8;
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow-x: hidden;
+      font-family: serif;
     }
-    h1 {
-      font-size: 2em;
-      color: #333;
-    }
-    h2 {
-      margin-top: 2em;
-      color: #444;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-top: 1em;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      text-align: left;
-    }
-    button {
-      margin-top: 20px;
-      padding: 10px 16px;
-      font-size: 14px;
-      cursor: pointer;
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
     }
   </style>
 </head>
-<body>
-  <h1 id="title">欢迎来到私塾AI</h1>
-  <p id="desc">
-    我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。老师教我们通过汉字的演变理解古人的思维方式，比如"日"字从太阳的象形而来，"明"由"日"和"月"组合表示光亮。<br><br>
-    后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。<br><br>
-    现在，我正在开发一系列工具：<br>
-    ✓ 将《九章算术》的文言题目转换为现代数学表达式<br>
-    ✓ 用可视化方式展示汉字演变与数学符号的关联<br>
-    ✓ 为古籍中的数学问题制作交互式解题动画<br><br>
-    这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。<br><br>
-    在这里，你可以看到：<br>
-    ✓ 300+道古算题的现代解析<br>
-    ✓ 汉字与数学符号的对照词典<br>
-    ✓ 文言文学习辅助工具<br><br>
-    让我们一起探索传统文化与现代科技的融合之美。
-  </p>
+<body class="text-gray-800">
+  <!-- Canvas for ink animation -->
+  <canvas id="inkCanvas"></canvas>
 
-  <h2>📌 平台核心板块概览</h2>
-  <table>
-    <tr>
-      <th>板块</th>
-      <th>子菜单/功能</th>
-      <th>交互效果</th>
-    </tr>
-    <tr>
-      <td>AI解题工具</td>
-      <td>- 文言文输入框<br>- 手写板（拍照/涂鸦）</td>
-      <td>实时生成解题步骤+动画<br>OCR识别+批改</td>
-    </tr>
-    <tr>
-      <td>古籍图书馆</td>
-      <td>- 《九章算术》全文<br>- 《孙子算经》精选</td>
-      <td>原文/译文对照阅读<br>关键算法图解</td>
-    </tr>
-    <tr>
-      <td>学习中心</td>
-      <td>- 错题本<br>- 能力图谱</td>
-      <td>按知识点归类错题<br>可视化学习进度</td>
-    </tr>
-    <tr>
-      <td>文化实验室</td>
-      <td>- 汉字数学学密码<br>- 古今算法对比</td>
-      <td>交互式解析「算」字演变<br>侧边栏滑动对比</td>
-    </tr>
-  </table>
+  <!-- Navigation bar -->
+  <header class="bg-white bg-opacity-60 backdrop-blur-sm shadow-md fixed w-full z-10">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+      <h1 class="text-2xl font-bold">NeoShuyuan 私塾</h1>
+      <nav class="space-x-4 text-lg">
+        <a href="#ai" class="hover:underline">AI解题工具</a>
+        <a href="#library" class="hover:underline">古籍图书馆</a>
+        <a href="#learning" class="hover:underline">学习中心</a>
+        <a href="#culture" class="hover:underline">文化实验室</a>
+      </nav>
+    </div>
+  </header>
 
-  <h2>🎬 英雄区（主视觉）</h2>
-  <ul>
-    <li><strong>动态演示窗：</strong>点击任意示例题（如“今有圆田周三十步”）→ 跳转完整解题页</li>
-    <li><strong>快速入口按钮：</strong>
-      <ul>
-        <li>🔍 开始探索 → 古籍图书馆</li>
-        <li>🧠 立即解题 → AI工具页</li>
-      </ul>
-    </li>
-  </ul>
+  <!-- Hero Section -->
+  <section class="h-screen flex flex-col justify-center items-center text-center px-4">
+    <h2 class="text-4xl font-bold mb-6 text-gray-800">欢迎来到 NeoShuyuan 私塾 AI</h2>
+    <p class="max-w-2xl text-xl text-gray-700">
+      传统文化 ✕ 人工智能，探索汉字与数学、技术与诗意的融合。
+    </p>
+  </section>
 
-  <h2>🧩 功能卡片区</h2>
-  <table>
-    <tr>
-      <th>卡片</th>
-      <th>点击后跳转</th>
-      <th>悬停效果</th>
-    </tr>
-    <tr>
-      <td>AI私塾先生</td>
-      <td>虚拟助手聊天页</td>
-      <td>播放古琴音效</td>
-    </tr>
-    <tr>
-      <td>3D数学博物馆</td>
-      <td>牵合方盖等模型互动页</td>
-      <td>预览模型旋转</td>
-    </tr>
-    <tr>
-      <td>我的学习档案</td>
-      <td>个人数据仪表盘</td>
-      <td>显示近期活跃度</td>
-    </tr>
-  </table>
+  <!-- Introduction -->
+  <section class="bg-white bg-opacity-80 py-12 px-8" id="about">
+    <div class="max-w-4xl mx-auto text-lg leading-relaxed">
+      <h3 class="text-2xl font-semibold mb-4">关于我</h3>
+      <p class="mb-4">
+        我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。
+        老师教我们通过汉字的演变理解古人的思维方式，比如"日"字从太阳的象形而来，"明"由"日"和"月"组合表示光亮。
+      </p>
+      <p class="mb-4">
+        后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。
+        这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。
+      </p>
+      <p class="mb-4">
+        我正在开发一系列工具：
+        <ul class="list-disc ml-6 mt-2">
+          <li>将《九章算术》的文言题目转换为现代数学表达式</li>
+          <li>用可视化方式展示汉字演变与数学符号的关联</li>
+          <li>为古籍中的数学问题制作交互式解题动画</li>
+        </ul>
+      </p>
+      <p>
+        这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。
+      </p>
+    </div>
+  </section>
 
-  <h2>🕰️ 文化时间轴</h2>
-  <ul>
-    <li><strong>公元前100年</strong> → 弹出《九章算术》历史典故</li>
-    <li><strong>2024年</strong> → 播放项目研发纪录片片段</li>
-  </ul>
+  <!-- Function Sections -->
+  <section class="py-16 px-6" id="ai">
+    <h2 class="text-2xl font-bold mb-4">AI 解题工具</h2>
+    <p>核心功能：文言输入解题 / 手写识别批改<br>辅助功能：实时动画展示 / 步骤讲解</p>
+  </section>
 
-  <h2>📱 移动端适配</h2>
-  <ul>
-    <li><strong>导航菜单</strong> → 折叠为「三横线」图标</li>
-    <li><strong>功能卡片</strong> → 改为垂直滑动列表</li>
-    <li><strong>时间轴</strong> → 左右滑动浏览</li>
-  </ul>
+  <section class="py-16 px-6 bg-gray-50" id="library">
+    <h2 class="text-2xl font-bold mb-4">古籍图书馆</h2>
+    <p>核心功能：《九章算术》《孙子算经》对照阅读<br>辅助功能：关键词算法图解 / 译文并列</p>
+  </section>
 
-  <button class="lang-btn" onclick="switchLanguage()">English</button>
+  <section class="py-16 px-6" id="learning">
+    <h2 class="text-2xl font-bold mb-4">学习中心</h2>
+    <p>核心功能：错题本 / 能力图谱<br>辅助功能：学习进度可视化 / 按知识点归类</p>
+  </section>
 
+  <section class="py-16 px-6 bg-gray-50" id="culture">
+    <h2 class="text-2xl font-bold mb-4">文化实验室</h2>
+    <p>核心功能：汉字数学密码 / 古今算法对比<br>辅助功能：互动式“算”字演变 / 时间轴图解</p>
+  </section>
+
+  <footer class="text-center py-6 text-sm text-gray-500">
+    © 2025 NeoShuyuan. All rights reserved.
+  </footer>
+
+  <!-- Ink Animation Script -->
   <script>
-    let currentLang = 'zh';
-    const texts = {
-      zh: {
-        title: '欢迎来到私塾AI',
-        desc: document.getElementById('desc').innerHTML,
-        switchLabel: 'English'
-      },
-      en: {
-        title: 'Welcome to SishuAI',
-        desc: `I was raised in a traditional Sishu (private Confucian school), never attending regular elementary school. My daily lessons involved reciting classics like the "Three Character Classic" and "Thousand Character Essay", and copying oracle bone and bronze script with brush and ink. Our teacher guided us to understand ancient thought through the evolution of Chinese characters—for example, how "日" (sun) derived from a sun pictograph, and "明" (bright) combined "sun" and "moon".<br><br>
-        Later, when I encountered programming, I was amazed by the parallel between the terse logic of classical Chinese and the structure of code. This inspired me to explore how technology could interpret ancient texts—especially mathematics.<br><br>
-        Now, I’m developing tools to:<br>
-        ✓ Convert math problems in "The Nine Chapters" into modern equations<br>
-        ✓ Visualize links between character evolution and math symbols<br>
-        ✓ Animate step-by-step solutions for ancient math questions<br><br>
-        This is not to replace tradition—but to build a bridge so more people can appreciate these cultural treasures.<br><br>
-        You’ll find here:<br>
-        ✓ Modern explanations for 300+ classic math problems<br>
-        ✓ A dictionary connecting Chinese characters and math symbols<br>
-        ✓ Tools for learning Classical Chinese<br><br>
-        Let’s explore the beauty where tradition meets technology.`,
-        switchLabel: '中文'
-      }
-    };
+    const canvas = document.getElementById('inkCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    function switchLanguage() {
-      currentLang = currentLang === 'zh' ? 'en' : 'zh';
-      document.getElementById('title').innerText = texts[currentLang].title;
-      document.getElementById('desc').innerHTML = texts[currentLang].desc;
-      document.querySelector('.lang-btn').innerText = texts[currentLang].switchLabel;
+    let drops = [];
+
+    function createDrop() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height / 2,
+        r: 0,
+        max: 60 + Math.random() * 30,
+        alpha: 0.5 + Math.random() * 0.5
+      };
     }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(255,255,255,0.06)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drops.forEach((d, i) => {
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0,0,0,${d.alpha})`;
+        ctx.fill();
+        d.r += 0.4;
+        if (d.r > d.max) drops[i] = createDrop();
+      });
+    }
+
+    function animate() {
+      draw();
+      requestAnimationFrame(animate);
+    }
+
+    for (let i = 0; i < 15; i++) drops.push(createDrop());
+    animate();
   </script>
 </body>
 </html>
