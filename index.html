@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>私塾AI - SishuAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "KaiTi", "楷体", serif;
+      background-image: url('https://img.zcool.cn/community/01fbd95ceac4f9a801203d22969385.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+    .lang-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      padding: 10px 20px;
+      border: 2px solid white;
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 0.5em;
+    }
+    p {
+      font-size: 1.5em;
+    }
+    .btn {
+      margin-top: 40px;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+    }
+    .btn:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <button class="lang-btn" onclick="switchLanguage()">English</button>
+
+  <h1 id="title">欢迎来到 私塾AI</h1>
+  <p id="desc">融合传统智慧与人工智能的教学平台</p>
+  <audio controls autoplay>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_b80d68b527.mp3" type="audio/mp3">
+    您的浏览器不支持音频播放。
+  </audio>
+  <br />
+  <button class="btn" id="mainBtn" onclick="alert('功能开发中 / Feature coming soon')">进入文言文AI答题区</button>
+
+  <script>
+    let currentLang = 'zh';
+    const texts = {
+      zh: {
+        title: '欢迎来到 私塾AI',
+        desc: '融合传统智慧与人工智能的教学平台',
+        btn: '进入文言文AI答题区',
+        switchLabel: 'English'
+      },
+      en: {
+        title: 'Welcome to SishuAI',
+        desc: 'A platform combining classical wisdom with artificial intelligence',
+        btn: 'Enter Classical Chinese AI Answer Zone',
+        switchLabel: '中文'
+      }
+    };
+
+    function switchLanguage() {
+      currentLang = currentLang === 'zh' ? 'en' : 'zh';
+      document.getElementById('title').innerText = texts[currentLang].title;
+      document.getElementById('desc').innerText = texts[currentLang].desc;
+      document.getElementById('mainBtn').innerText = texts[currentLang].btn;
+      document.querySelector('.lang-btn').innerText = texts[currentLang].switchLabel;
+    }
+  </script>
+</body>
+</html>
