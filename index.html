@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NeoShuyuan 私塾 AI</title>
   <style>
     html, body {
@@ -10,9 +10,8 @@
       padding: 0;
       font-family: 'Noto Serif SC', serif;
       color: #333;
-      background-color: #fff;
+      background-color: #F8F4E9;
     }
-
     canvas {
       position: fixed;
       top: 0; left: 0;
@@ -20,38 +19,40 @@
       height: 100%;
       z-index: -1;
     }
-
     nav {
       text-align: center;
       padding: 1em;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.95);
       position: sticky;
       top: 0;
       z-index: 100;
     }
-
     nav a {
-      margin: 1em;
+      margin: 1.5em;
       text-decoration: none;
-      color: #000;
+      color: #0A2E7A;
       font-weight: bold;
       font-size: 18px;
     }
-
     section {
       padding: 3em 10%;
-      background-color: rgba(255,255,255,0.95);
+      background-color: rgba(255,255,255,0.9);
     }
-
     h1 {
       font-size: 2.2em;
       text-align: center;
       margin-bottom: 1em;
     }
-
     p {
       font-size: 1.1em;
       line-height: 1.8;
+    }
+    ul {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
+    li {
+      margin-bottom: 0.6em;
     }
   </style>
 </head>
@@ -60,46 +61,44 @@
 <canvas id="ink"></canvas>
 
 <nav>
-  <a href="#ai-tools">AI解题工具 / AI Tools</a>
-  <a href="#library">古籍图书馆 / Classics</a>
-  <a href="#learning">学习中心 / Learning</a>
-  <a href="#culture">文化实验室 / Culture</a>
+  <a href="ai-tools.html">AI解题工具 / AI Tools</a>
+  <a href="library.html">古籍图书馆 / Classics</a>
+  <a href="learning.html">学习中心 / Learning</a>
+  <a href="culture.html">文化实验室 / Culture</a>
 </nav>
 
 <section>
-  <h1>欢迎来到 NeoShuyuan · 私塾AI实验</h1>
+  <h1>欢迎 Welcome to NeoShuyuan · 私塾AI实验</h1>
   <p>
-    我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。
-    老师教我们通过汉字的演变理解古人的思维方式，比如"日"字从太阳的象形而来，"明"由"日"和"月"组合表示光亮。
+    我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。<br>
+    <i>I studied at a traditional Chinese academy as a child, without attending a regular primary school. My daily lessons included reciting the *Three Character Classic* and the *Thousand Character Essay*, and copying oracle bone and bronze inscriptions with a brush.</i>
     <br><br>
-    后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。
+    老师教我们通过汉字的演变理解古人的思维方式，比如"日"字从太阳的象形而来，"明"由"日"和"月"组合表示光亮。<br>
+    <i>We were taught to understand how ancient people thought through the evolution of Chinese characters. For example, the character "日" originated as a pictograph of the sun, and "明" (bright) combines "日" (sun) and "月" (moon).</i>
     <br><br>
-    现在，我正在开发一系列工具：
+    后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。<br>
+    <i>Later, when I encountered computers and programming, I was amazed to find a strange similarity between the compact structure of classical Chinese and programming languages. This discovery inspired me to use technology to interpret classical texts, especially ancient mathematical works.</i>
+    <br><br>
+    现在，我开发一系列工具：<br>
+    <i>I've developed a series of tools:</i>
     <ul>
-      <li>将《九章算术》的文言题目转换为现代数学表达式</li>
-      <li>用可视化方式展示汉字演变与数学符号的关联</li>
-      <li>为古籍中的数学问题制作交互式解题动画</li>
+      <li>将《九章算术》的文言题目转换为现代数学表达式<br><i>Converting classical math problems from *The Nine Chapters* into modern math notation</i></li>
+      <li>用可视化方式展示汉字演变与数学符号的关联<br><i>Visualizing the connection between character evolution and math symbols</i></li>
+      <li>为古籍中的数学问题制作交互式解题动画<br><i>Creating interactive animated solutions for ancient math problems</i></li>
     </ul>
-    这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。
-    <br><br>
-    In this project, I aim to bridge traditional Chinese scholarship with modern technology. Let’s explore how characters, logic, and ancient algorithms come alive again through code and visualization.
+    这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。<br>
+    <i>These projects are not meant to replace traditional learning, but to build a bridge that makes this cultural treasure more accessible.</i>
   </p>
 </section>
 
-<!-- 这里可以加你四大板块跳转锚点 -->
-
 <script>
-  // 简单水墨动画（墨滴扩散效果）
   const canvas = document.getElementById("ink");
   const ctx = canvas.getContext("2d");
-
   let drops = [];
-
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
-
   function dropInk() {
     drops.push({
       x: Math.random() * canvas.width,
@@ -108,10 +107,8 @@
       opacity: 1
     });
   }
-
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     for (let i = 0; i < drops.length; i++) {
       let d = drops[i];
       ctx.beginPath();
@@ -121,12 +118,9 @@
       d.radius += 1;
       d.opacity -= 0.005;
     }
-
     drops = drops.filter(d => d.opacity > 0);
-
     requestAnimationFrame(animate);
   }
-
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
   setInterval(dropInk, 800);
