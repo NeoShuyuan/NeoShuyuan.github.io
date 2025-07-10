@@ -12,7 +12,6 @@
     *::-webkit-scrollbar {
       display: none;
     }
-
     body {
       margin: 0;
       padding: 0;
@@ -22,7 +21,6 @@
       overflow-x: hidden;
       background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     }
-
     #ink-container {
       position: fixed;
       top: 0;
@@ -32,7 +30,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
     nav {
       display: flex;
       justify-content: center;
@@ -44,7 +41,6 @@
       top: 0;
       z-index: 1000;
     }
-
     .nav-button {
       margin: 0 15px;
       background: none;
@@ -52,21 +48,18 @@
       font-size: 1rem;
       cursor: pointer;
     }
-
     .main-content {
       max-width: 800px;
       margin: 120px auto 50px;
       padding: 30px;
       text-align: center;
-      background-color: transparent !important;
+      background-color: transparent;
       color: #222;
     }
-
     ul {
       list-style: none;
       padding-left: 0;
     }
-
     .footer-controls {
       position: fixed;
       bottom: 0;
@@ -79,7 +72,6 @@
       backdrop-filter: blur(4px);
       z-index: 1000;
     }
-
     .music-control, .language-switch {
       background-color: #8B4513;
       color: white;
@@ -135,13 +127,14 @@
   <button class="language-switch" id="language-switch">中文 / English</button>
 </div>
 
-<audio id="guqin-music" loop autoplay>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+<audio id="bg-music" loop autoplay>
+  <source src="https://cdn.jsdelivr.net/gh/stevenliuyi/music-host@main/moonlight-sonata.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-  const music = document.getElementById('guqin-music');
+  const music = document.getElementById('bg-music');
   const musicBtn = document.getElementById('music-toggle');
+
   musicBtn.onclick = () => {
     if (music.paused) {
       music.play();
@@ -160,12 +153,11 @@
     });
   };
 
-  // 动态墨水晕染动画
+  // 墨水动画
   const canvas = document.getElementById('ink-container');
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
   let drops = [];
 
   function createDrop() {
@@ -201,8 +193,9 @@
     requestAnimationFrame(animate);
   }
 
-  setInterval(createDrop, 3000);
+  setInterval(createDrop, 2000);
   animate();
 </script>
+
 </body>
 </html>
