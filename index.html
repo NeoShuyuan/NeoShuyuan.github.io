@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeoShuyuan - 新书院</title>
     <style>
-        /* 全局样式 - 保持原有 */
         body {
             margin: 0;
             padding: 0;
@@ -16,7 +15,6 @@
             background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L100 0 L100 100 L0 100 Z" fill="none" stroke="rgba(0,0,0,0.05)" stroke-width="0.5"/></svg>');
         }
 
-        /* 水墨晕染容器 - 增强效果 */
         #ink-container {
             position: fixed;
             top: 0;
@@ -28,7 +26,6 @@
             overflow: hidden;
         }
 
-        /* 更大的水墨晕染效果 */
         .ink-blot {
             position: absolute;
             border-radius: 50%;
@@ -52,60 +49,136 @@
                 opacity: 0;
             }
         }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-button {
+            margin: 0 15px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .main-content {
+            max-width: 800px;
+            margin: 120px auto 50px;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .footer-controls {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            backdrop-filter: blur(4px);
+        }
+
+        .music-control, .language-switch {
+            background-color: #8B4513;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+        }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 水墨晕染效果容器 -->
     <div id="ink-container"></div>
-    
-    <!-- 页面内容 -->
-    <!-- ...其他内容保持不变... -->
+
+    <nav>
+        <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
+        <button class="nav-button" data-en="Classics" data-zh="古籍">Classics</button>
+        <button class="nav-button" data-en="Learning" data-zh="学习">Learning</button>
+        <button class="nav-button" data-en="Culture" data-zh="文化">Culture</button>
+    </nav>
+
+    <div class="main-content">
+        <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
+        <p data-en="I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions."
+           data-zh="我幼时曾就读于传统书院，每日功课包括背诵《三字经》和临摹甲骨文。">
+           I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions.
+        </p>
+        <p data-en="Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright)."
+           data-zh="老师向我们展示'日'如何演变为'明'这样的概念。">
+           Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright).
+        </p>
+        <p data-en="When I encountered programming later, I found its structure oddly similar to Classical Chinese."
+           data-zh="后来接触编程时，我发现其结构与文言文惊人地相似。">
+           When I encountered programming later, I found its structure oddly similar to Classical Chinese.
+        </p>
+        <p data-en="Now, here are tools to reinterpret ancient math:"
+           data-zh="现在，这里有一些重新诠释古代数学的工具：">
+           Now, here are tools to reinterpret ancient math:
+        </p>
+        <ul>
+            <li data-en="Transforming The Nine Chapters into modern expressions"
+                data-zh="将《九章算术》转化为现代表达式">Transforming The Nine Chapters into modern expressions</li>
+            <li data-en="Visualizing links between Chinese characters and math notation"
+                data-zh="可视化汉字与数学符号之间的联系">Visualizing links between Chinese characters and math notation</li>
+            <li data-en="Creating interactive animations for ancient problem solving"
+                data-zh="为古代解题方法创建交互式动画">Creating interactive animations for ancient problem solving</li>
+        </ul>
+        <p data-en="These tools are a bridge between tradition and technology."
+           data-zh="这些工具是传统与技术之间的桥梁。">These tools are a bridge between tradition and technology.</p>
+    </div>
+
+    <div class="footer-controls">
+        <button class="music-control" id="music-toggle">Pause Music</button>
+        <button class="language-switch" id="language-switch">中文 / English</button>
+    </div>
+
+    <audio id="guqin-music" loop autoplay>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
-        // 水墨晕染效果脚本
-        document.addEventListener('DOMContentLoaded', function() {
-            const inkContainer = document.getElementById('ink-container');
-            
-            function createInkBlot(x, y) {
-                const inkBlot = document.createElement('div');
-                inkBlot.className = 'ink-blot';
-                
-                // 随机大小
-                const size = Math.random() * 200 + 100;
-                inkBlot.style.width = `${size}px`;
-                inkBlot.style.height = `${size}px`;
-                
-                // 设置位置
-                inkBlot.style.left = `${x}px`;
-                inkBlot.style.top = `${y}px`;
-                
-                // 随机颜色 - 水墨风格
-                const hue = Math.random() * 20 + 200; // 偏向蓝黑色调
-                const saturation = Math.random() * 30 + 20;
-                inkBlot.style.background = `radial-gradient(circle, hsla(${hue}, ${saturation}%, 10%, 0.8) 0%, hsla(${hue}, ${saturation}%, 5%, 0) 80%)`;
-                
-                inkContainer.appendChild(inkBlot);
-                
-                // 动画结束后移除元素
-                setTimeout(() => {
-                    inkBlot.remove();
-                }, 8000);
-            }
-            
-            // 点击时创建水墨晕染
-            document.addEventListener('click', function(e) {
-                createInkBlot(e.clientX, e.clientY);
+        function createInkBlot() {
+            const container = document.getElementById('ink-container');
+            const blot = document.createElement('div');
+            blot.className = 'ink-blot';
+            blot.style.left = `${Math.random() * 100}%`;
+            blot.style.top = `${Math.random() * 100}%`;
+            blot.style.width = blot.style.height = `${60 + Math.random() * 80}px`;
+            container.appendChild(blot);
+            setTimeout(() => blot.remove(), 8000);
+        }
+        setInterval(createInkBlot, 2500);
+        for (let i = 0; i < 5; i++) setTimeout(createInkBlot, i * 1000);
+
+        const music = document.getElementById('guqin-music');
+        const musicBtn = document.getElementById('music-toggle');
+        musicBtn.onclick = () => {
+            if (music.paused) { music.play(); musicBtn.textContent = "Pause Music"; }
+            else { music.pause(); musicBtn.textContent = "Play Music"; }
+        };
+
+        let lang = 'en';
+        document.getElementById('language-switch').onclick = () => {
+            lang = lang === 'en' ? 'zh' : 'en';
+            document.querySelectorAll('[data-en]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
             });
-            
-            // 初始随机水墨效果
-            for (let i = 0; i < 3; i++) {
-                setTimeout(() => {
-                    const x = Math.random() * window.innerWidth;
-                    const y = Math.random() * window.innerHeight;
-                    createInkBlot(x, y);
-                }, i * 1000);
-            }
-        });
+        };
     </script>
 </body>
 </html>
+
