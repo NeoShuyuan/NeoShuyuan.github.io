@@ -12,7 +12,6 @@
     *::-webkit-scrollbar {
       display: none;
     }
-
     body {
       margin: 0;
       padding: 0;
@@ -22,7 +21,6 @@
       overflow-x: hidden;
       background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     }
-
     #ink-container {
       position: fixed;
       top: 0;
@@ -32,7 +30,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
     nav {
       display: flex;
       justify-content: center;
@@ -44,7 +41,6 @@
       top: 0;
       z-index: 1000;
     }
-
     .nav-button {
       margin: 0 15px;
       background: none;
@@ -52,20 +48,18 @@
       font-size: 1rem;
       cursor: pointer;
     }
-
     .main-content {
       max-width: 800px;
       margin: 120px auto 50px;
       padding: 30px;
       text-align: center;
       background-color: transparent;
+      color: #222;
     }
-
     ul {
       list-style: none;
       padding-left: 0;
     }
-
     .footer-controls {
       position: fixed;
       bottom: 0;
@@ -78,14 +72,12 @@
       backdrop-filter: blur(4px);
       z-index: 1000;
     }
-
     .music-control, .language-switch {
       background-color: #8B4513;
       color: white;
       padding: 8px 16px;
       border: none;
       border-radius: 20px;
-      cursor: pointer;
     }
   </style>
 </head>
@@ -104,19 +96,7 @@
   <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
   <p data-en="I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions."
      data-zh="我幼时曾就读于传统书院，每日功课包括背诵《三字经》和临摹甲骨文。">
-     I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions.
-  </p>
-  <p data-en="Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright)."
-     data-zh="老师向我们展示'日'如何演变为'明'这样的概念。">
-     Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright).
-  </p>
-  <p data-en="When I encountered programming later, I found its structure oddly similar to Classical Chinese."
-     data-zh="后来接触编程时，我发现其结构与文言文惊人地相似。">
-     When I encountered programming later, I found its structure oddly similar to Classical Chinese.
-  </p>
-  <p data-en="Now, here are tools to reinterpret ancient math:"
-     data-zh="现在，这里有一些重新诠释古代数学的工具：">
-     Now, here are tools to reinterpret ancient math:
+     I studied at a traditional Chinese academy as a child...
   </p>
   <ul>
     <li data-en="Transforming The Nine Chapters into modern expressions"
@@ -126,21 +106,18 @@
     <li data-en="Creating interactive animations for ancient problem solving"
         data-zh="为古代解题方法创建交互式动画">Creating interactive animations for ancient problem solving</li>
   </ul>
-  <p data-en="These tools are a bridge between tradition and technology."
-     data-zh="这些工具是传统与技术之间的桥梁。">These tools are a bridge between tradition and technology.</p>
 </div>
 
 <div class="footer-controls">
-  <button class="music-control" id="music-toggle">Pause Music</button>
+  <button class="music-control" id="music-toggle">Play Music</button>
   <button class="language-switch" id="language-switch">中文 / English</button>
 </div>
 
-<audio id="guqin-music" autoplay loop>
-  <source src="https://cdn.jsdelivr.net/gh/stevenliuyi/music-host@main/moonlight-sonata.mp3" type="audio/mpeg">
+<audio id="guqin-music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-  // 音乐播放控制
   const music = document.getElementById('guqin-music');
   const musicBtn = document.getElementById('music-toggle');
   musicBtn.onclick = () => {
@@ -153,21 +130,19 @@
     }
   };
 
-  // 中英文切换
   let lang = 'en';
   document.getElementById('language-switch').onclick = () => {
     lang = lang === 'en' ? 'zh' : 'en';
     document.querySelectorAll('[data-en]').forEach(el => {
-      el.textContent = el.getAttribute("data-" + lang);
+      el.textContent = el.getAttribute(`data-${lang}`);
     });
   };
 
-  // 墨水晕染动画
+  // 墨水动画
   const canvas = document.getElementById('ink-container');
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
   let drops = [];
 
   function createDrop() {
@@ -183,7 +158,7 @@
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drops.forEach((drop, index) => {
-      drop.r += 1.8;
+      drop.r += 1.2;
       drop.alpha *= 0.98;
 
       if (drop.r > drop.maxR || drop.alpha < 0.01) {
@@ -203,8 +178,9 @@
     requestAnimationFrame(animate);
   }
 
-  setInterval(createDrop, 1800);
+  setInterval(createDrop, 2000);
   animate();
 </script>
+
 </body>
 </html>
