@@ -1,4 +1,4 @@
-还是不行啊<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -148,7 +148,7 @@ musicBtn.onclick = () => {
   document.getElementById('language-switch').onclick = () => {
     lang = lang === 'en' ? 'zh' : 'en';
     document.querySelectorAll('[data-en]').forEach(el => {
-      el.textContent = el.getAttribute(`data-${lang}`);
+      el.textContent = el.getAttribute(data-${lang});
     });
   };
 
@@ -172,7 +172,7 @@ musicBtn.onclick = () => {
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drops.forEach((drop, index) => {
-      drop.r += 1.2;
+      drop.r += 1.8;
       drop.alpha *= 0.98;
 
       if (drop.r > drop.maxR || drop.alpha < 0.01) {
@@ -181,7 +181,7 @@ musicBtn.onclick = () => {
       }
 
       const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
-      gradient.addColorStop(0, `rgba(0, 50, 30, ${drop.alpha})`);
+      gradient.addColorStop(0, rgba(0, 50, 30, ${drop.alpha}));
       gradient.addColorStop(1, 'rgba(0, 50, 30, 0)');
 
       ctx.beginPath();
