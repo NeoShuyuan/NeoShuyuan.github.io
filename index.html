@@ -5,18 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeoShuyuan - 新书院</title>
     <style>
-        /* 全局样式 - 保持原有 */
         body {
             margin: 0;
             padding: 0;
             font-family: 'Noto Serif SC', serif;
-            background-color: rgba(240, 248, 255, 0.3);
+            background-color: rgba(255, 255, 255, 0.8);
             color: #333;
             overflow-x: hidden;
-            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L100 0 L100 100 L0 100 Z" fill="none" stroke="rgba(0,0,0,0.05)" stroke-width="0.5"/></svg>');
         }
 
-        /* 水墨晕染容器 - 增强效果 */
+        /* 水墨背景 */
         #ink-container {
             position: fixed;
             top: 0;
@@ -24,256 +22,157 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
+            z-index: -2;
         }
-
-        /* 更大的水墨晕染效果 */
         .ink-blot {
             position: absolute;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 80%);
+            background: radial-gradient(circle, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 70%);
             filter: blur(8px);
             transform: translate(-50%, -50%);
-            opacity: 0;
             animation: inkSpread 8s ease-out forwards;
+            opacity: 0;
         }
-
         @keyframes inkSpread {
-            0% {
-                transform: translate(-50%, -50%) scale(0.3);
-                opacity: 0;
-            }
-            20% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(4);
-                opacity: 0;
-            }
+            0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0.1; }
+            50% { opacity: 0.3; }
+            100% { transform: translate(-50%, -50%) scale(4); opacity: 0; }
         }
 
-        /* 精细竹子设计 - 不透明古风 */
-        .bamboo-svg {
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+        }
+        .nav-button {
+            margin: 0 15px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .main-content {
+            max-width: 800px;
+            margin: 80px auto;
+            background-color: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .footer-controls {
             position: fixed;
-            top: 0;
-            height: 100vh;
-            width: 180px;
-            z-index: -1;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            backdrop-filter: blur(4px);
         }
-
-        .bamboo-left {
-            left: 0;
-        }
-
-        .bamboo-right {
-            right: 0;
-            transform: scaleX(-1);
-        }
-
-        /* 书法汉字装饰 */
-        .calligraphy {
-            position: absolute;
-            font-family: 'Ma Shan Zheng', 'Noto Serif SC', serif;
-            font-size: 3rem;
-            color: rgba(0, 0, 0, 0.15);
-            writing-mode: vertical-rl;
-            text-orientation: upright;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .calligraphy.left {
-            left: 60px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .calligraphy.right {
-            right: 60px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        /* 保持原有布局结构 */
-        nav, .main-content, .footer-controls {
-            /* 保持原有样式不变 */
+        .music-control, .language-switch {
+            background-color: #8B4513;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- 水墨晕染背景 -->
     <div id="ink-container"></div>
-    
-    <!-- 精细竹子设计（左侧） -->
-    <svg class="bamboo-svg bamboo-left" viewBox="0 0 200 1000" preserveAspectRatio="none">
-        <defs>
-            <linearGradient id="bamboo-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#2E8B57" />
-                <stop offset="100%" stop-color="#3CB371" />
-            </linearGradient>
-            <pattern id="bamboo-pattern" patternUnits="userSpaceOnUse" width="30" height="60">
-                <!-- 竹节 -->
-                <rect x="12" y="0" width="6" height="60" fill="url(#bamboo-grad)" rx="3" ry="3"/>
-                <!-- 竹节纹 -->
-                <path d="M12 15 L18 15 M12 25 L18 25 M12 35 L18 35 M12 45 L18 45" 
-                      stroke="#1A5D2E" stroke-width="1.5" stroke-linecap="round"/>
-                <!-- 竹叶 -->
-                <path d="M15 5 Q25 -5 15 15 L5 5 Z" fill="#1A5D2E" opacity="0.7"/>
-                <path d="M15 20 Q25 30 15 40 L5 30 Z" fill="#1A5D2E" opacity="0.7"/>
-            </pattern>
-        </defs>
-        <rect x="0" y="0" width="200" height="1000" fill="url(#bamboo-pattern)"/>
-    </svg>
-    
-    <!-- 精细竹子设计（右侧） -->
-    <svg class="bamboo-svg bamboo-right" viewBox="0 0 200 1000" preserveAspectRatio="none">
-        <use href="#bamboo-pattern"/>
-    </svg>
-    
-    <!-- 书法汉字装饰 -->
-    <div class="calligraphy left">書香門第<br>學貫中西</div>
-    <div class="calligraphy right">格物致知<br>厚德載物</div>
-    
-    <!-- 保持原有内容结构 -->
+
     <nav>
-        <button class="nav-button" data-en="AI Tools" data-zh="AI工具">AI Tools</button>
-        <button class="nav-button" data-en="Classics" data-zh="经典">Classics</button>
+        <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
+        <button class="nav-button" data-en="Classics" data-zh="古籍">Classics</button>
         <button class="nav-button" data-en="Learning" data-zh="学习">Learning</button>
         <button class="nav-button" data-en="Culture" data-zh="文化">Culture</button>
     </nav>
-    
+
     <div class="main-content">
         <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
-        
+
         <div id="personal-intro">
-            <!-- 保持原有文本内容 -->
+            <p data-en="I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions." 
+               data-zh="我幼时曾就读于传统书院，每日功课包括背诵《三字经》和临摹甲骨文。">
+                I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions.
+            </p>
+            <p data-en="Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright)." 
+               data-zh="老师向我们展示'日'如何演变为'明'这样的概念。">
+                Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright).
+            </p>
+            <p data-en="When I encountered programming later, I found its structure oddly similar to Classical Chinese." 
+               data-zh="后来接触编程时，我发现其结构与文言文惊人地相似。">
+                When I encountered programming later, I found its structure oddly similar to Classical Chinese.
+            </p>
+            <p data-en="Now, here are tools to reinterpret ancient math:" 
+               data-zh="现在，这里有一些重新诠释古代数学的工具：">
+                Now, here are tools to reinterpret ancient math:
+            </p>
+            <ul style="text-align: left; display: inline-block;">
+                <li data-en="Transforming The Nine Chapters into modern expressions" 
+                    data-zh="将《九章算术》转化为现代表达式">
+                    Transforming The Nine Chapters into modern expressions
+                </li>
+                <li data-en="Visualizing links between Chinese characters and math notation" 
+                    data-zh="可视化汉字与数学符号之间的联系">
+                    Visualizing links between Chinese characters and math notation
+                </li>
+                <li data-en="Creating interactive animations for ancient problem solving" 
+                    data-zh="为古代解题方法创建交互式动画">
+                    Creating interactive animations for ancient problem solving
+                </li>
+            </ul>
+            <p data-en="These tools are a bridge between tradition and technology." 
+               data-zh="这些工具是传统与技术之间的桥梁。">
+                These tools are a bridge between tradition and technology.
+            </p>
         </div>
     </div>
-    
+
     <div class="footer-controls">
-        <button class="music-control" id="music-toggle">
-            <span data-en="Pause Guqin Music" data-zh="暂停古琴音乐">Pause Guqin Music</span>
-        </button>
+        <button class="music-control" id="music-toggle">Pause Music</button>
         <button class="language-switch" id="language-switch">中文 / English</button>
     </div>
 
-    <!-- 更换为循环古琴音乐（使用合法公开资源） -->
     <audio id="guqin-music" loop autoplay>
-        <source src="https://music.163.com/song/media/outer/url?id=1824045033.mp3" type="audio/mpeg">
-        <!-- 备用音乐源 -->
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // 增强水墨晕染效果
+        // 水墨背景
         function createInkBlot() {
             const container = document.getElementById('ink-container');
             const blot = document.createElement('div');
             blot.className = 'ink-blot';
-            
-            // 全页面随机位置（包括靠近边缘区域）
-            const xPos = 5 + Math.random() * 90;
-            const yPos = 5 + Math.random() * 90;
-            
-            blot.style.left = `${xPos}%`;
-            blot.style.top = `${yPos}%`;
-            
-            // 更大尺寸和更长动画时间
-            const size = 100 + Math.random() * 150;
-            blot.style.width = `${size}px`;
-            blot.style.height = `${size}px`;
-            
-            const duration = 6 + Math.random() * 6;
-            blot.style.animationDuration = `${duration}s`;
-            
-            // 随机透明度变化
-            const opacityPeak = 0.7 + Math.random() * 0.3;
-            blot.style.opacity = opacityPeak;
-            
+            blot.style.left = `${Math.random() * 100}%`;
+            blot.style.top = `${Math.random() * 100}%`;
+            blot.style.width = blot.style.height = `${60 + Math.random() * 80}px`;
             container.appendChild(blot);
-            
-            setTimeout(() => {
-                blot.remove();
-            }, duration * 1000);
+            setTimeout(() => blot.remove(), 8000);
         }
-        
-        // 更频繁的水墨生成
-        setInterval(createInkBlot, 1500);
-        
-        // 初始多个水墨晕染
-        for (let i = 0; i < 8; i++) {
-            setTimeout(createInkBlot, i * 600);
-        }
+        setInterval(createInkBlot, 3000);
+        for (let i = 0; i < 5; i++) setTimeout(createInkBlot, i * 1000);
 
-        // 保持原有音乐控制和语言切换逻辑
-        const musicToggle = document.getElementById('music-toggle');
-        const guqinMusic = document.getElementById('guqin-music');
-        let isPlaying = true;
-        
-        function handleAutoplay() {
-            guqinMusic.play().then(() => {
-                isPlaying = true;
-                updateMusicButton();
-            }).catch(error => {
-                console.log("自动播放被阻止:", error);
-                isPlaying = false;
-                updateMusicButton();
-                document.body.addEventListener('click', function initPlay() {
-                    guqinMusic.play().then(() => {
-                        isPlaying = true;
-                        updateMusicButton();
-                    });
-                    document.body.removeEventListener('click', initPlay);
-                }, { once: true });
+        // 音乐控制
+        const music = document.getElementById('guqin-music');
+        const musicBtn = document.getElementById('music-toggle');
+        musicBtn.onclick = () => {
+            if (music.paused) { music.play(); musicBtn.textContent = "Pause Music"; }
+            else { music.pause(); musicBtn.textContent = "Play Music"; }
+        };
+
+        // 语言切换
+        let lang = 'en';
+        document.getElementById('language-switch').onclick = () => {
+            lang = lang === 'en' ? 'zh' : 'en';
+            document.querySelectorAll('[data-en]').forEach(el => {
+                el.textContent = el.getAttribute(`data-${lang}`);
             });
-        }
-        
-        function updateMusicButton() {
-            if (isPlaying) {
-                musicToggle.querySelector('span').textContent = 
-                    document.documentElement.lang === 'zh' ? '暂停古琴音乐' : 'Pause Guqin Music';
-            } else {
-                musicToggle.querySelector('span').textContent = 
-                    document.documentElement.lang === 'zh' ? '播放古琴音乐' : 'Play Guqin Music';
-            }
-        }
-        
-        musicToggle.addEventListener('click', () => {
-            if (isPlaying) {
-                guqinMusic.pause();
-            } else {
-                guqinMusic.play();
-            }
-            isPlaying = !isPlaying;
-            updateMusicButton();
-        });
-        
-        handleAutoplay();
-        
-        // 语言切换逻辑保持不变
-        const languageSwitch = document.getElementById('language-switch');
-        let currentLang = 'en';
-        document.documentElement.lang = currentLang;
-        
-        languageSwitch.addEventListener('click', () => {
-            currentLang = currentLang === 'en' ? 'zh' : 'en';
-            document.documentElement.lang = currentLang;
-            
-            document.querySelectorAll('[data-en], [data-zh]').forEach(element => {
-                const text = currentLang === 'en' ? 
-                    element.getAttribute('data-en') : 
-                    element.getAttribute('data-zh');
-                
-                if (element.hasAttribute('data-en') && element.hasAttribute('data-zh')) {
-                    element.textContent = text;
-                }
-            });
-            
-            languageSwitch.textContent = currentLang === 'en' ? '中文 / English' : 'English / 中文';
-            updateMusicButton();
-        });
+        };
     </script>
 </body>
 </html>
