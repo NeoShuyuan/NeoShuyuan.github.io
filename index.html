@@ -135,14 +135,30 @@
     <button class="language-switch" id="language-switch">中文 / English</button>
   </div>
 
-  <audio id="guqin-music" preload="auto">
+  <audio id="guqin-music" preload="auto" loop>
     <source src="https://files.catbox.moe/4hccfb.mp3" type="audio/mpeg">
   </audio>
 
   <script>
     const music = document.getElementById('guqin-music');
     const musicBtn = document.getElementById('music-toggle');
+    const langBtn = document.getElementById('language-switch');
 
+    // 初始按钮文字
+    musicBtn.textContent = "Play Music";
+
+    // 用户首次交互后允许播放音乐
+    let interacted = false;
+    function enableAudio() {
+      if (!interacted) {
+        music.play().catch(() => {});
+        interacted = true;
+        document.removeEventListener('click', enableAudio);
+      }
+    }
+    document.addEventListener('click', enableAudio);
+
+    // 播放与暂停
     musicBtn.onclick = () => {
       if (music.paused) {
         music.play();
@@ -153,15 +169,16 @@
       }
     };
 
+    // 语言切换
     let lang = 'en';
-    document.getElementById('language-switch').onclick = () => {
+    langBtn.onclick = () => {
       lang = lang === 'en' ? 'zh' : 'en';
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${lang}`);
       });
     };
 
-    // 动态墨水晕染动画
+    // 墨水晕染动画
     const canvas = document.getElementById('ink-container');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -182,7 +199,7 @@
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drops.forEach((drop, index) => {
-        drop.r += 1.8;
+        drop.r += 2.0;
         drop.alpha *= 0.98;
 
         if (drop.r > drop.maxR || drop.alpha < 0.01) {
