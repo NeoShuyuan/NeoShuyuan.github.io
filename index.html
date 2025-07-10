@@ -137,46 +137,21 @@
   <button class="language-switch" id="language-switch">中文 / English</button>
 </div>
 
-<audio id="guqin-music" preload="auto">
-  <source src="https://pixabay.com/audio/download/209372_13961161-piano-solos/" type="audio/mpeg">
+
+<audio id="guqin-music" loop muted>
+  <source src="https://cdn.pixabay.com/download/audio/2023/03/31/audio_e72f2b6ef6.mp3" type="audio/mpeg">
 </audio>
 
-// 修改音乐控制部分代码如下
-const music = document.getElementById('guqin-music');
-const musicBtn = document.getElementById('music-toggle');
+<script>
+  // 语言切换功能
+  let lang = 'en';
+  document.getElementById('language-switch').onclick = () => {
+    lang = lang === 'en' ? 'zh' : 'en';
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.textContent = el.getAttribute(`data-${lang}`);
+    });
+  };
 
-// 确保音频加载
-music.load();
-
-let isPlaying = false;
-
-// 更可靠的播放控制
-musicBtn.addEventListener('click', async () => {
-  try {
-    if (isPlaying) {
-      await music.pause();
-      musicBtn.textContent = musicBtn.getAttribute(`data-${lang}`) || "Play Music";
-    } else {
-      await music.play();
-      musicBtn.textContent = "Pause Music";
-    }
-    isPlaying = !isPlaying;
-  } catch (error) {
-    console.error("音乐播放错误:", error);
-    // 备用方案：提示用户点击页面任意位置激活音频
-    if(error.name === 'NotAllowedError') {
-      alert("请先点击页面任意位置激活音频播放权限");
-    }
-  }
-});
-
-// 在语言切换时更新按钮文本
-document.getElementById('language-switch').addEventListener('click', () => {
-  if(musicBtn) {
-    musicBtn.textContent = isPlaying ? "Pause Music" : 
-      (musicBtn.getAttribute(`data-${lang}`) || "Play Music");
-  }
-});
   let lang = 'en';
   document.getElementById('language-switch').onclick = () => {
     lang = lang === 'en' ? 'zh' : 'en';
