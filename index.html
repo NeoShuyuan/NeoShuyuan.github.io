@@ -139,18 +139,33 @@
   <source src="https://cdn.jsdelivr.net/gh/stevenliuyi/music-host@main/moonlight-sonata.mp3" type="audio/mpeg">
 </audio>
 
-<script>
-  const music = document.getElementById('guqin-music');
-  const musicBtn = document.getElementById('music-toggle');
-  musicBtn.onclick = () => {
-    if (music.paused) {
-      music.play();
-      musicBtn.textContent = "Pause Music";
-    } else {
-      music.pause();
-      musicBtn.textContent = "Play Music";
-    }
-  };
+const music = document.getElementById('guqin-music');
+const musicBtn = document.getElementById('music-toggle');
+let isPlaying = false;
+
+musicBtn.onclick = () => {
+  if (music.paused) {
+    music.muted = false; // 取消静音（关键点）
+    music.play();
+    musicBtn.textContent = "Pause Music";
+    isPlaying = true;
+  } else {
+    music.pause();
+    musicBtn.textContent = "Play Music";
+    isPlaying = false;
+  }
+};
+
+// 监听用户首次点击页面，触发音乐播放
+document.body.addEventListener('click', () => {
+  if (!isPlaying) {
+    music.muted = false;
+    music.play();
+    musicBtn.textContent = "Pause Music";
+    isPlaying = true;
+  }
+}, { once: true });
+
 
   let lang = 'en';
   document.getElementById('language-switch').onclick = () => {
