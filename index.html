@@ -132,16 +132,17 @@
 
 <script>
   const music = document.getElementById('bg-music');
-  const musicBtn = document.getElementById('music-toggle');
-  musicBtn.onclick = () => {
-    if (music.paused) {
-      music.play();
-      musicBtn.textContent = "Pause Music";
-    } else {
-      music.pause();
-      musicBtn.textContent = "Play Music";
-    }
-  };
+const musicBtn = document.getElementById('music-toggle');
+
+musicBtn.onclick = () => {
+  if (music.paused) {
+    music.play();
+    musicBtn.textContent = "Pause Music";
+  } else {
+    music.pause();
+    musicBtn.textContent = "Play Music";
+  }
+};
 
   let lang = 'en';
   document.getElementById('language-switch').onclick = () => {
