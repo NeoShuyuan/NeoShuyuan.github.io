@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+还是不行啊<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -126,75 +126,31 @@
   <button class="music-control" id="music-toggle">Play Music</button>
   <button class="language-switch" id="language-switch">中文 / English</button>
 </div>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NeoShuyuan - Music Control</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Noto Serif SC', serif;
-      background-color: #fdfcf8;
-      background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-      text-align: center;
-      color: #222;
-    }
+<audio id="bg-music" loop autoplay>
+  <source src="https://cdn.jsdelivr.net/gh/stevenliuyi/music-host@main/moonlight-sonata.mp3" type="audio/mpeg">
+</audio>
 
-    .button-container {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 12px;
-      z-index: 1000;
-    }
+<script>
+  const music = document.getElementById('bg-music');
+const musicBtn = document.getElementById('music-toggle');
 
-    .music-button {
-      background-color: #8B4513;
-      color: white;
-      border: none;
-      padding: 10px 24px;
-      border-radius: 20px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+musicBtn.onclick = () => {
+  if (music.paused) {
+    music.play();
+    musicBtn.textContent = "Pause Music";
+  } else {
+    music.pause();
+    musicBtn.textContent = "Play Music";
+  }
+};
 
-    .music-button:hover {
-      background-color: #a0522d;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="button-container">
-    <button id="musicToggle" class="music-button">Play Music</button>
-    <button class="music-button">中文 / English</button>
-  </div>
-
-  <audio id="pianoAudio" src="https://cdn.pixabay.com/download/audio/2023/03/28/audio_2a81ac64ab.mp3?filename=moonlight-sonata-14798.mp3" loop></audio>
-
-  <script>
-    const musicBtn = document.getElementById("musicToggle");
-    const audio = document.getElementById("pianoAudio");
-
-    musicBtn.addEventListener("click", () => {
-      if (audio.paused) {
-        audio.play();
-        musicBtn.textContent = "Pause Music";
-      } else {
-        audio.pause();
-        musicBtn.textContent = "Play Music";
-      }
+  let lang = 'en';
+  document.getElementById('language-switch').onclick = () => {
+    lang = lang === 'en' ? 'zh' : 'en';
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.textContent = el.getAttribute(`data-${lang}`);
     });
-  </script>
-
-</body>
-</html>
+  };
 
   // 墨水动画
   const canvas = document.getElementById('ink-container');
