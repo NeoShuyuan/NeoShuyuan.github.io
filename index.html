@@ -23,6 +23,16 @@
       background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     }
 
+    #ink-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
     nav {
       display: flex;
       justify-content: center;
@@ -49,9 +59,6 @@
       padding: 30px;
       text-align: center;
       background-color: transparent !important;
-      border-radius: 0 !important;
-      box-shadow: none !important;
-      backdrop-filter: none !important;
       color: #222;
     }
 
@@ -70,6 +77,7 @@
       background: rgba(255, 255, 255, 0.7);
       padding: 10px;
       backdrop-filter: blur(4px);
+      z-index: 1000;
     }
 
     .music-control, .language-switch {
@@ -78,16 +86,6 @@
       padding: 8px 16px;
       border: none;
       border-radius: 20px;
-    }
-
-    #ink-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 0;
     }
   </style>
 </head>
@@ -133,34 +131,24 @@
 </div>
 
 <div class="footer-controls">
-  <button class="music-control" id="music-toggle">Play Music</button>
+  <button class="music-control" id="music-toggle">Pause Music</button>
   <button class="language-switch" id="language-switch">中文 / English</button>
 </div>
 
-<audio id="guqin-music" loop preload="auto">
-  <source src="https://cdn.pixabay.com/download/audio/2023/03/31/audio_e72f2b6ef6.mp3" type="audio/mpeg">
+<audio id="guqin-music" loop autoplay>
+  <source src="https://cdn.jsdelivr.net/gh/stevenliuyi/music-host@main/moonlight-sonata.mp3" type="audio/mpeg">
 </audio>
 
 <script>
   const music = document.getElementById('guqin-music');
   const musicBtn = document.getElementById('music-toggle');
-
-  // 初始状态为暂停
-  let isPlaying = false;
-
   musicBtn.onclick = () => {
-    if (isPlaying) {
+    if (music.paused) {
+      music.play();
+      musicBtn.textContent = "Pause Music";
+    } else {
       music.pause();
       musicBtn.textContent = "Play Music";
-      isPlaying = false;
-    } else {
-      music.muted = false;
-      music.play().then(() => {
-        musicBtn.textContent = "Pause Music";
-        isPlaying = true;
-      }).catch(e => {
-        console.log("Autoplay blocked. User interaction required.", e);
-      });
     }
   };
 
@@ -168,7 +156,7 @@
   document.getElementById('language-switch').onclick = () => {
     lang = lang === 'en' ? 'zh' : 'en';
     document.querySelectorAll('[data-en]').forEach(el => {
-      el.textContent = el.getAttribute(`data-${lang}`);
+      el.textContent = el.getAttribute(data-${lang});
     });
   };
 
@@ -193,7 +181,7 @@
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drops.forEach((drop, index) => {
-      drop.r += 1.2;
+      drop.r += 1.8;
       drop.alpha *= 0.98;
 
       if (drop.r > drop.maxR || drop.alpha < 0.01) {
@@ -202,7 +190,7 @@
       }
 
       const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
-      gradient.addColorStop(0, `rgba(0, 50, 30, ${drop.alpha})`);
+      gradient.addColorStop(0, rgba(0, 50, 30, ${drop.alpha}));
       gradient.addColorStop(1, 'rgba(0, 50, 30, 0)');
 
       ctx.beginPath();
@@ -213,7 +201,7 @@
     requestAnimationFrame(animate);
   }
 
-  setInterval(createDrop, 3000);
+  setInterval(createDrop, 2000);
   animate();
 </script>
 </body>
