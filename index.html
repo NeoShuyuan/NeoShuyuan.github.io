@@ -19,7 +19,7 @@
     body {
       font-family: 'Noto Serif SC', serif;
       background: url('Image_20250710102436.jpg') no-repeat center center fixed;
-      background-size: cover;
+      background-size: 100% 100%; /* ✅ 拉伸填满页面，完整显示整张图 */
       color: #111;
       overflow-x: hidden;
       height: 100vh;
@@ -160,7 +160,7 @@
       updateLanguage();
     };
 
-    // 水墨滴效果
+    // 墨滴动画
     const canvas = document.getElementById('ink-container');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
