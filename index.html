@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeoShuyuan · Classical AI Studio</title>
+  <title>NeoShuyuan · Classical Meets AI</title>
   <style>
     html, body {
       margin: 0;
@@ -15,28 +15,27 @@
     canvas {
       position: fixed;
       top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       z-index: -1;
     }
     body::before, body::after {
       content: "";
       position: fixed;
       top: 0;
-      width: 120px;
+      width: 80px;
       height: 100%;
-      background-repeat: no-repeat;
+      background-image: url('https://i.imgur.com/xvpgdVW.png'); /* 竹子图像 */
       background-size: cover;
-      z-index: -1;
-      opacity: 0.6;
+      background-repeat: no-repeat;
+      opacity: 0.3;
+      z-index: 0;
     }
     body::before {
       left: 0;
-      background-image: url('https://i.imgur.com/G1D3u3W.png'); /* 左侧真实竹子图 */
     }
     body::after {
       right: 0;
-      background-image: url('https://i.imgur.com/G1D3u3W.png'); /* 右侧真实竹子图 */
     }
     nav {
       text-align: center;
@@ -44,45 +43,31 @@
       background: rgba(255,255,255,0.9);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 2;
     }
-    nav a {
-      margin: 1em;
+    nav a, button {
+      margin: 0.5em 1em;
       text-decoration: none;
-      color: #0A2E7A;
+      color: #000;
       font-weight: bold;
-      font-size: 18px;
-    }
-    #languageBtn, #musicBtn {
-      margin: 0.5em;
-      padding: 0.5em 1em;
-      font-size: 14px;
-      cursor: pointer;
+      font-size: 16px;
       border: none;
-      border-radius: 6px;
-      background-color: #9C4A1A;
-      color: white;
+      background: none;
+      cursor: pointer;
     }
     section {
-      padding: 3em 10%;
-      background-color: rgba(255,255,255,0.95);
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2em;
+      background: rgba(255,255,255,0.85);
+      border-radius: 8px;
+      z-index: 1;
+      position: relative;
     }
     h1 {
-      font-size: 2.2em;
       text-align: center;
-      margin-bottom: 1em;
-      color: #111;
     }
-    p {
-      font-size: 1.1em;
-      line-height: 1.8;
-      color: #333;
-    }
-    ul {
-      font-size: 1.05em;
-      line-height: 1.6;
-      color: #333;
-    }
+    ul { padding-left: 1.2em; }
   </style>
 </head>
 <body>
@@ -90,54 +75,51 @@
 <canvas id="ink"></canvas>
 
 <nav>
-  <a href="#ai-tools">AI Tools</a>
-  <a href="#classics">Classics</a>
-  <a href="#learning">Learning</a>
-  <a href="#culture">Culture</a>
-  <button id="languageBtn">中文</button>
-  <button id="musicBtn">Play Guqin</button>
+  <a href="#ai-tools" class="nav">AI Tools</a>
+  <a href="#library" class="nav">Classics</a>
+  <a href="#learning" class="nav">Learning</a>
+  <a href="#culture" class="nav">Culture</a>
+  <button id="langBtn">中文</button>
+  <button id="musicBtn">🎵 Play Qin</button>
 </nav>
 
-<section id="intro">
-  <h1 id="title">Welcome to NeoShuyuan · Classical AI Studio</h1>
-  <p id="description">
-    I studied at a traditional Chinese academy as a child, without attending a regular primary school. My daily lessons included reciting the <i>Three Character Classic</i> and the <i>Thousand Character Essay</i>, and copying oracle bone and bronze inscriptions with a brush.<br><br>
-    We were taught to understand how ancient people thought through the evolution of Chinese characters. For example, the character "日" originated as a pictograph of the sun, and "明" (bright) combines "日" (sun) and "月" (moon).<br><br>
-    Later, when I encountered computers and programming, I was amazed to find a strange similarity between the compact structure of classical Chinese and programming languages. This discovery inspired me to use technology to interpret classical texts, especially ancient mathematical works.<br><br>
-    I’m now developing a series of tools:
+<section>
+  <h1 id="title">Welcome to NeoShuyuan · Classical AI Lab</h1>
+  <p id="intro">
+    I studied at a traditional Chinese academy as a child. My daily lessons included reciting the <i>Three Character Classic</i> and copying oracle bone inscriptions.<br><br>
+    Our teacher showed us how ancient characters like “日” (sun) evolved into concepts like “明” (bright).<br><br>
+    When I encountered programming later, I found its structure oddly similar to Classical Chinese.<br><br>
+    Now, I develop tools to reinterpret ancient math:<br><br>
     <ul>
-      <li>Converting classical math problems from <i>The Nine Chapters</i> into modern math notation</li>
-      <li>Visualizing the connection between character evolution and math symbols</li>
-      <li>Creating interactive animated solutions for ancient math problems</li>
+      <li>Transforming <i>The Nine Chapters</i> into modern expressions</li>
+      <li>Visualizing links between Chinese characters and math notation</li>
+      <li>Creating interactive animations for ancient problem solving</li>
     </ul>
-    These projects are not meant to replace traditional learning, but to build a bridge that makes this cultural treasure more accessible.
+    These tools are a bridge between tradition and technology.
   </p>
 </section>
 
-<audio id="guqin" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2023/02/24/audio_b2d646b536.mp3?filename=guqin-loop-14013.mp3" type="audio/mp3">
+<audio id="qinAudio" loop>
+  <source src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Guqin_example.ogg" type="audio/ogg">
 </audio>
 
 <script>
+  // 墨水扩散动画
   const canvas = document.getElementById("ink");
   const ctx = canvas.getContext("2d");
   let drops = [];
-
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
-
   function dropInk() {
-    drops = [];
     drops.push({
-      x: Math.random() * canvas.width * 0.8 + canvas.width * 0.1,
-      y: Math.random() * canvas.height * 0.6 + canvas.height * 0.2,
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
       radius: 0,
-      opacity: 0.6 + Math.random() * 0.4
+      opacity: 1
     });
   }
-
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let d of drops) {
@@ -145,44 +127,64 @@
       ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(0, 0, 0, ${d.opacity})`;
       ctx.fill();
-      d.radius += 0.8;
-      d.opacity -= 0.001;
+      d.radius += 0.5;
+      d.opacity -= 0.003;
     }
     drops = drops.filter(d => d.opacity > 0);
     requestAnimationFrame(animate);
   }
-
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
-  setInterval(dropInk, 2200);
+  setInterval(dropInk, 1800);
   animate();
 
+  // 古琴播放控制
   const musicBtn = document.getElementById("musicBtn");
-  const guqin = document.getElementById("guqin");
-  let musicPlaying = false;
-  musicBtn.onclick = () => {
-    if (!musicPlaying) {
-      guqin.play();
-      musicBtn.textContent = "Pause Guqin";
+  const audio = document.getElementById("qinAudio");
+  let playing = false;
+  musicBtn.addEventListener("click", () => {
+    playing = !playing;
+    if (playing) {
+      audio.play();
+      musicBtn.textContent = "🔇 Pause Qin";
     } else {
-      guqin.pause();
-      musicBtn.textContent = "Play Guqin";
+      audio.pause();
+      musicBtn.textContent = "🎵 Play Qin";
     }
-    musicPlaying = !musicPlaying;
-  };
+  });
 
-  const languageBtn = document.getElementById("languageBtn");
-  let currentLang = 'en';
-  languageBtn.onclick = () => {
-    if (currentLang === 'en') {
-      document.getElementById("title").textContent = "欢迎来到NeoShuyuan · 私塾AI实验";
-      document.getElementById("description").innerHTML = `我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。<br><br>老师教我们通过汉字的演变理解古人的思维方式，比如\"日\"字从太阳的象形而来，\"明\"由\"日\"和\"月\"组合表示光亮。<br><br>后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。<br><br>现在，我正在开发一系列工具：<ul><li>将《九章算术》的文言题目转换为现代数学表达式</li><li>用可视化方式展示汉字演变与数学符号的关联</li><li>为古籍中的数学问题制作交互式解题动画</li></ul>这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。`;
-      languageBtn.textContent = "English";
-      currentLang = 'zh';
-    } else {
-      location.reload();
-    }
-  };
+  // 中英文切换
+  const langBtn = document.getElementById("langBtn");
+  let inEnglish = true;
+  langBtn.addEventListener("click", () => {
+    inEnglish = !inEnglish;
+    document.getElementById("title").textContent = inEnglish ?
+      "Welcome to NeoShuyuan · Classical AI Lab" : "欢迎来到 NeoShuyuan · 私塾AI实验室";
+    document.getElementById("intro").innerHTML = inEnglish ? `
+      I studied at a traditional Chinese academy as a child. My daily lessons included reciting the <i>Three Character Classic</i> and copying oracle bone inscriptions.<br><br>
+      Our teacher showed us how ancient characters like “日” (sun) evolved into concepts like “明” (bright).<br><br>
+      When I encountered programming later, I found its structure oddly similar to Classical Chinese.<br><br>
+      Now, I develop tools to reinterpret ancient math:<br><br>
+      <ul>
+        <li>Transforming <i>The Nine Chapters</i> into modern expressions</li>
+        <li>Visualizing links between Chinese characters and math notation</li>
+        <li>Creating interactive animations for ancient problem solving</li>
+      </ul>
+      These tools are a bridge between tradition and technology.
+    ` : `
+      我从小在私塾学习，每天诵读《三字经》，临摹甲骨文。<br><br>
+      老师教我们如何从“日”演变出“明”等概念。<br><br>
+      接触编程后，我发现它的结构与文言文奇妙地相似。<br><br>
+      现在，我正在开发一些工具来重新解读古代数学：<br><br>
+      <ul>
+        <li>将《九章算术》转化为现代数学表达</li>
+        <li>展示汉字演变与数学符号的联系</li>
+        <li>制作交互动画解答古代问题</li>
+      </ul>
+      这些工具是传统与科技之间的桥梁。
+    `;
+    langBtn.textContent = inEnglish ? "中文" : "English";
+  });
 </script>
 
 </body>
