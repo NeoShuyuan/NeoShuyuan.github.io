@@ -156,7 +156,7 @@
   document.getElementById('language-switch').onclick = () => {
     lang = lang === 'en' ? 'zh' : 'en';
     document.querySelectorAll('[data-en]').forEach(el => {
-      el.textContent = el.getAttribute(data-${lang});
+      el.textContent = el.getAttribute(`data-${lang}`);
     });
   };
 
@@ -190,7 +190,7 @@
       }
 
       const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
-      gradient.addColorStop(0, rgba(0, 50, 30, ${drop.alpha}));
+      gradient.addColorStop(0, `rgba(0, 50, 30, ${drop.alpha})`);
       gradient.addColorStop(1, 'rgba(0, 50, 30, 0)');
 
       ctx.beginPath();
