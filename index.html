@@ -126,23 +126,25 @@
   <button class="music-control" id="music-toggle">Play Music</button>
   <button class="language-switch" id="language-switch">中文 / English</button>
 </div>
-<audio id="bg-music" loop autoplay>
-  <source src="https://cdn.jsdelivr.net/gh/stevenliuyi/music-host@main/moonlight-sonata.mp3" type="audio/mpeg">
+<!-- 可播放的音乐（温柔钢琴） -->
+<audio id="bg-music" autoplay loop muted>
+  <source src="https://cdn.pixabay.com/audio/2023/03/03/audio_c0f0e5ddf5.mp3" type="audio/mpeg">
 </audio>
 
 <script>
   const music = document.getElementById('bg-music');
-const musicBtn = document.getElementById('music-toggle');
+  const musicBtn = document.getElementById('music-toggle');
 
-musicBtn.onclick = () => {
-  if (music.paused) {
-    music.play();
-    musicBtn.textContent = "Pause Music";
-  } else {
-    music.pause();
-    musicBtn.textContent = "Play Music";
-  }
-};
+  musicBtn.onclick = () => {
+    music.muted = false; // 解除静音
+    if (music.paused) {
+      music.play();
+      musicBtn.textContent = "Pause Music";
+    } else {
+      music.pause();
+      musicBtn.textContent = "Play Music";
+    }
+  };
 
   let lang = 'en';
   document.getElementById('language-switch').onclick = () => {
@@ -151,6 +153,7 @@ musicBtn.onclick = () => {
       el.textContent = el.getAttribute(`data-${lang}`);
     });
   };
+</script>
 
   // 墨水动画
   const canvas = document.getElementById('ink-container');
