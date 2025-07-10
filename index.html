@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -17,7 +17,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Noto Serif SC', serif;
-      background: url('bd837b31-8c7b-474b-9809-efda243706a0.png') no-repeat center center fixed;
+      background: url('background.png') no-repeat center center fixed;
       background-size: cover;
       color: #111;
       overflow-x: hidden;
@@ -75,10 +75,11 @@
       font-size: 3.2rem;
       margin: 0;
       color: #111;
-      background-color: rgba(255, 255, 255, 0.4);
-      padding: 20px 50px;
-      border-radius: 16px;
-      backdrop-filter: blur(4px);
+      background: none;
+      padding: 0;
+      border-radius: 0;
+      backdrop-filter: none;
+      box-shadow: none;
     }
 
     .footer-controls {
@@ -108,29 +109,35 @@
   <canvas id="ink-container"></canvas>
 
   <nav>
-    <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI解题工具</button>
-    <button class="nav-button" data-en="Classics" data-zh="古籍">古籍</button>
-    <button class="nav-button" data-en="Learning" data-zh="学习">学习</button>
-    <button class="nav-button" data-en="Culture" data-zh="文化">文化</button>
-    <button class="nav-button" onclick="location.href='./profile.html'" data-en="Profile" data-zh="个人">个人</button>
+    <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
+    <button class="nav-button" data-en="Classics" data-zh="古籍">Classics</button>
+    <button class="nav-button" data-en="Learning" data-zh="学习">Learning</button>
+    <button class="nav-button" data-en="Culture" data-zh="文化">Culture</button>
+    <button class="nav-button" onclick="location.href='./profile.html'" data-en="Profile" data-zh="个人">Profile</button>
   </nav>
 
   <div class="main-content">
-    <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">欢迎来到新书院</h1>
+    <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
   </div>
 
   <div class="footer-controls">
-    <button class="music-control" id="music-toggle">Pause Music</button>
+    <button class="music-control" id="music-toggle">Play Music</button>
     <button class="language-switch" id="language-switch">中文 / English</button>
   </div>
 
-  <audio id="guqin-music" autoplay loop>
+  <audio id="guqin-music">
     <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
     const music = document.getElementById('guqin-music');
     const musicBtn = document.getElementById('music-toggle');
+    const langBtn = document.getElementById('language-switch');
+
+    // 默认暂停音乐
+    music.pause();
+    musicBtn.textContent = "Play Music";
+
     musicBtn.onclick = () => {
       if (music.paused) {
         music.play();
@@ -141,14 +148,21 @@
       }
     };
 
-    let lang = 'zh';
-    document.getElementById('language-switch').onclick = () => {
-      lang = lang === 'en' ? 'zh' : 'en';
+    // 默认语言英文
+    let lang = 'en';
+    function updateLanguage() {
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${lang}`);
       });
+    }
+    updateLanguage();
+
+    langBtn.onclick = () => {
+      lang = lang === 'en' ? 'zh' : 'en';
+      updateLanguage();
     };
 
+    // 墨滴动画
     const canvas = document.getElementById('ink-container');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
