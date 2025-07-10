@@ -7,7 +7,7 @@
   <style>
     :root {
       --main-blue: #0A2E7A;
-      --paper-white: rgba(248, 244, 233, 0.9);
+      --paper-white: rgba(255, 255, 255, 0.85);
       --vermillion: #9C4A1A;
     }
     *, *::before, *::after {
@@ -27,7 +27,6 @@
       width: 100vw;
       height: 100vh;
       z-index: -1;
-      opacity: 0.5;
       pointer-events: none;
     }
     nav {
@@ -37,7 +36,7 @@
       padding: 1em;
       position: sticky;
       top: 0;
-      background: rgba(248, 244, 233, 0.9);
+      background: rgba(255,255,255,0.95);
       z-index: 10;
     }
     nav a {
@@ -76,7 +75,7 @@
       margin-left: 1.2em;
       list-style-type: disc;
     }
-    button#audio-btn {
+    #audio-btn {
       position: fixed;
       bottom: 1em;
       right: 1em;
@@ -93,98 +92,95 @@
 </head>
 <body>
 
-  <canvas id="ink"></canvas>
+<canvas id="ink"></canvas>
 
-  <button id="lang-toggle">中文</button>
+<button id="lang-toggle">中文</button>
 
-  <nav>
-    <a href="ai-tools.html">AI Tools</a>
-    <a href="library.html">Classics</a>
-    <a href="learning.html">Learning</a>
-    <a href="culture.html">Culture</a>
-  </nav>
+<nav>
+  <a href="#">AI Tools</a>
+  <a href="#">Classics</a>
+  <a href="#">Learning</a>
+  <a href="#">Culture</a>
+</nav>
 
-  <section>
-    <h1 id="title-en">Welcome to NeoShuyuan · Classical AI Studio</h1>
-    <h1 id="title-zh" style="display:none;">欢迎来到 NeoShuyuan · 私塾 AI 实验室</h1>
+<section>
+  <h1 id="title-en">Welcome to NeoShuyuan · Classical AI Studio</h1>
+  <h1 id="title-zh" style="display:none;">欢迎来到 NeoShuyuan · 私塾 AI 实验室</h1>
+  <div id="en-text">
+    <p>I studied at a traditional Chinese academy as a child, without attending a regular primary school. My daily lessons included reciting the <em>Three Character Classic</em> and the <em>Thousand Character Essay</em>, and copying oracle bone and bronze inscriptions with a brush.</p>
+    <p>We were taught to understand how ancient people thought through the evolution of Chinese characters. For example, the character "日" originated as a pictograph of the sun, and "明" (bright) combines "日" (sun) and "月" (moon).</p>
+    <p>Later, when I encountered computers and programming, I was amazed to find a strange similarity between the compact structure of classical Chinese and programming languages. This discovery inspired me to use technology to interpret classical texts, especially ancient mathematical works.</p>
+    <ul>
+      <li>Convert classical math problems from <em>The Nine Chapters</em> into modern expressions</li>
+      <li>Visualize the relationship between character evolution and math symbols</li>
+      <li>Create interactive animations to solve problems found in ancient texts</li>
+    </ul>
+    <p>These tools aim not to replace traditional learning but to build a bridge that makes these cultural treasures more accessible to everyone.</p>
+  </div>
+  <div id="zh-text" style="display:none;">
+    <p>我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。</p>
+    <p>老师教我们通过汉字的演变理解古人的思维方式，比如“日”字从太阳的象形而来，“明”由“日”和“月”组合表示光亮。</p>
+    <p>后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。</p>
+    <ul>
+      <li>将《九章算术》的文言题目转换为现代数学表达式</li>
+      <li>用可视化方式展示汉字演变与数学符号的关联</li>
+      <li>为古籍中的数学问题制作交互式解题动画</li>
+    </ul>
+    <p>这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。</p>
+  </div>
+</section>
 
-    <div id="en-text">
-      <p>I studied at a traditional Chinese academy as a child, without attending a regular primary school. My daily lessons included reciting the <em>Three Character Classic</em> and the <em>Thousand Character Essay</em>, and copying oracle bone and bronze inscriptions with a brush.</p>
-      <p>We were taught to understand how ancient people thought through the evolution of Chinese characters. For example, the character "日" originated as a pictograph of the sun, and "明" (bright) combines "日" (sun) and "月" (moon).</p>
-      <p>Later, when I encountered computers and programming, I was amazed to find a strange similarity between the compact structure of classical Chinese and programming languages. This discovery inspired me to use technology to interpret classical texts, especially ancient mathematical works.</p>
-      <ul>
-        <li>Convert classical math problems from <em>The Nine Chapters</em> into modern expressions</li>
-        <li>Visualize the relationship between character evolution and math symbols</li>
-        <li>Create interactive animations to solve problems found in ancient texts</li>
-      </ul>
-      <p>These tools aim not to replace traditional learning but to build a bridge that makes these cultural treasures more accessible to everyone.</p>
-    </div>
+<button id="audio-btn">🎵 Play Qin</button>
+<audio id="qin-audio" src="https://cdn.jsdelivr.net/gh/dtinth/comedy-sound@master/music/guqin.mp3"></audio>
 
-    <div id="zh-text" style="display:none;">
-      <p>我从小在私塾学习，没有经历过传统的小学教育。每天的功课是诵读《三字经》《千字文》，用毛笔临摹甲骨文和金文。</p>
-      <p>老师教我们通过汉字的演变理解古人的思维方式，比如“日”字从太阳的象形而来，“明”由“日”和“月”组合表示光亮。</p>
-      <p>后来接触电脑和编程时，我惊讶地发现：文言文的简洁结构与编程语言有着奇妙的相似。这个发现让我开始尝试用技术来解读传统经典，特别是古代数学著作。</p>
-      <ul>
-        <li>将《九章算术》的文言题目转换为现代数学表达式</li>
-        <li>用可视化方式展示汉字演变与数学符号的关联</li>
-        <li>为古籍中的数学问题制作交互式解题动画</li>
-      </ul>
-      <p>这些项目不是为了取代传统学习，而是希望搭建一座桥梁，让更多人能够轻松理解这些珍贵的文化遗产。</p>
-    </div>
-  </section>
+<script>
+const canvas = document.getElementById('ink');
+const ctx = canvas.getContext('2d');
+let drops = [];
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+function dropInk() {
+  drops.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: 0, max: 120 });
+}
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drops.forEach((d, i) => {
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, d.r, 0, 2 * Math.PI);
+    ctx.fillStyle = `rgba(0,0,0,${(1 - d.r / d.max) * 0.1})`;
+    ctx.fill();
+    d.r += 0.5;
+    if (d.r > d.max) drops.splice(i, 1);
+  });
+  requestAnimationFrame(animate);
+}
+setInterval(dropInk, 2500);
+animate();
 
-  <button id="audio-btn">🎵 Play Qin</button>
-  <audio id="qin-audio" src="https://www.bensound.com/bensound-music/bensound-anewbeginning.mp3"></audio>
+document.getElementById('lang-toggle').onclick = () => {
+  const isZh = document.getElementById('zh-text').style.display === '';
+  document.getElementById('zh-text').style.display = isZh ? 'none' : '';
+  document.getElementById('en-text').style.display = isZh ? '' : 'none';
+  document.getElementById('title-zh').style.display = isZh ? 'none' : '';
+  document.getElementById('title-en').style.display = isZh ? '' : 'none';
+  document.getElementById('lang-toggle').textContent = isZh ? '中文' : 'English';
+};
 
-  <script>
-    // Ink-drop animation
-    const canvas = document.getElementById('ink');
-    const ctx = canvas.getContext('2d');
-    let drops = [];
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resize); resize();
-
-    function newDrop() {
-      drops.push({ x: canvas.width * Math.random(), y: canvas.height * Math.random(), r: 0, max: 80 });
-    }
-    function anim() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drops.forEach((d,i) => {
-        ctx.beginPath();
-        ctx.arc(d.x, d.y, d.r, 0, 2*Math.PI);
-        const alpha = 1 - d.r/d.max;
-        ctx.fillStyle = `rgba(0,0,0,${alpha*0.2})`;
-        ctx.fill();
-        d.r += 0.5;
-        if (d.r > d.max) drops.splice(i,1);
-      });
-      requestAnimationFrame(anim);
-    }
-    setInterval(newDrop, 2000);
-    anim();
-
-    // Language toggle
-    const btn = document.getElementById('lang-toggle');
-    let isZh = false;
-    btn.onclick = () => {
-      isZh = !isZh;
-      document.getElementById('en-text').style.display = isZh ? 'none' : '';
-      document.getElementById('zh-text').style.display = isZh ? '' : 'none';
-      document.getElementById('title-en').style.display = isZh ? 'none' : '';
-      document.getElementById('title-zh').style.display = isZh ? '' : '';
-      btn.textContent = isZh ? 'English' : '中文';
-    };
-
-    // Qin music control
-    const audio = document.getElementById('qin-audio');
-    const audBtn = document.getElementById('audio-btn');
-    let playing = false;
-    audBtn.onclick = () => {
-      if(!playing) { audio.play(); audBtn.textContent = '⏸️ Pause Qin'; }
-      else { audio.pause(); audBtn.textContent = '🎵 Play Qin'; }
-      playing = !playing;
-    };
-  </script>
+document.getElementById('audio-btn').onclick = () => {
+  const audio = document.getElementById('qin-audio');
+  if (audio.paused) {
+    audio.play();
+    document.getElementById('audio-btn').textContent = '⏸ Pause Qin';
+  } else {
+    audio.pause();
+    document.getElementById('audio-btn').textContent = '🎵 Play Qin';
+  }
+};
+</script>
 
 </body>
 </html>
