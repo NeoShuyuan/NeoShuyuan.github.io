@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+这个的播放音乐和翻译是坏了吗<!DOCTYPE html>   
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -297,7 +297,7 @@
     document.getElementById('language-switch').onclick = () => {
       lang = lang === 'en' ? 'zh' : 'en';
       document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
+        el.textContent = el.getAttribute(data-${lang});
       });
     };
 
@@ -331,7 +331,7 @@
         }
 
         const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
-        gradient.addColorStop(0, `rgba(0, 50, 30, ${drop.alpha})`);
+        gradient.addColorStop(0, rgba(0, 50, 30, ${drop.alpha}));
         gradient.addColorStop(1, 'rgba(0, 50, 30, 0)');
 
         ctx.beginPath();
@@ -342,7 +342,7 @@
       requestAnimationFrame(animate);
     }
 
-    setInterval(createDrop, 1500); // 每3秒生成一滴新墨水
+    setInterval(createDrop, 1800); // 每3秒生成一滴新墨水
     animate();
   </script>
 </body>
@@ -355,7 +355,7 @@
     document.getElementById('language-switch').onclick = () => {
       lang = lang === 'en' ? 'zh' : 'en';
       document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
+        el.textContent = el.getAttribute(data-${lang});
       });
     };
   </script>
