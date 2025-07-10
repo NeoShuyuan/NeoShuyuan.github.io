@@ -131,34 +131,18 @@
   </div>
 
   <div class="footer-controls">
-    <button class="music-control" id="music-toggle">Play Music</button>
+    <button class="music-control" id="music-toggle">Pause Music</button>
     <button class="language-switch" id="language-switch">中文 / English</button>
   </div>
 
-  <audio id="guqin-music" preload="auto" loop>
-    <source src="https://files.catbox.moe/4hccfb.mp3" type="audio/mpeg">
+  <audio id="guqin-music" loop autoplay>
+    <source src="https://neoshuyuan.github.io/chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
   </audio>
 
   <script>
     const music = document.getElementById('guqin-music');
     const musicBtn = document.getElementById('music-toggle');
-    const langBtn = document.getElementById('language-switch');
-
-    // 初始按钮文字
-    musicBtn.textContent = "Play Music";
-
-    // 用户首次交互后允许播放音乐
-    let interacted = false;
-    function enableAudio() {
-      if (!interacted) {
-        music.play().catch(() => {});
-        interacted = true;
-        document.removeEventListener('click', enableAudio);
-      }
-    }
-    document.addEventListener('click', enableAudio);
-
-    // 播放与暂停
     musicBtn.onclick = () => {
       if (music.paused) {
         music.play();
@@ -169,9 +153,8 @@
       }
     };
 
-    // 语言切换
     let lang = 'en';
-    langBtn.onclick = () => {
+    document.getElementById('language-switch').onclick = () => {
       lang = lang === 'en' ? 'zh' : 'en';
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${lang}`);
@@ -183,7 +166,6 @@
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
     let drops = [];
 
     function createDrop() {
@@ -201,16 +183,13 @@
       drops.forEach((drop, index) => {
         drop.r += 2.0;
         drop.alpha *= 0.98;
-
         if (drop.r > drop.maxR || drop.alpha < 0.01) {
           drops.splice(index, 1);
           return;
         }
-
         const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
         gradient.addColorStop(0, `rgba(0, 50, 30, ${drop.alpha})`);
         gradient.addColorStop(1, 'rgba(0, 50, 30, 0)');
-
         ctx.beginPath();
         ctx.fillStyle = gradient;
         ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
@@ -219,7 +198,7 @@
       requestAnimationFrame(animate);
     }
 
-    setInterval(createDrop, 1800);
+    setInterval(createDrop, 1500);
     animate();
   </script>
 </body>
