@@ -136,7 +136,7 @@
 </div>
 
 <audio id="guqin-music" loop autoplay>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+  <source src="https://cdn.jsdelivr.net/gh/stevenliuyi/music-host@main/moonlight-sonata.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -181,7 +181,7 @@
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drops.forEach((drop, index) => {
-      drop.r += 1.2;
+      drop.r += 1.8;
       drop.alpha *= 0.98;
 
       if (drop.r > drop.maxR || drop.alpha < 0.01) {
@@ -201,7 +201,7 @@
     requestAnimationFrame(animate);
   }
 
-  setInterval(createDrop, 3000);
+  setInterval(createDrop, 2000);
   animate();
 </script>
 </body>
