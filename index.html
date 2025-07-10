@@ -1,191 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeoShuyuan · Classical Meets AI</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Noto Serif SC', serif;
-      background-color: #F8F4E9;
-      overflow-x: hidden;
-    }
-    canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
-    body::before, body::after {
-      content: "";
-      position: fixed;
-      top: 0;
-      width: 80px;
-      height: 100%;
-      background-image: url('https://i.imgur.com/xvpgdVW.png'); /* 竹子图像 */
-      background-size: cover;
-      background-repeat: no-repeat;
-      opacity: 0.3;
-      z-index: 0;
-    }
-    body::before {
-      left: 0;
-    }
-    body::after {
-      right: 0;
-    }
-    nav {
-      text-align: center;
-      padding: 1em;
-      background: rgba(255,255,255,0.9);
-      position: sticky;
-      top: 0;
-      z-index: 2;
-    }
-    nav a, button {
-      margin: 0.5em 1em;
-      text-decoration: none;
-      color: #000;
-      font-weight: bold;
-      font-size: 16px;
-      border: none;
-      background: none;
-      cursor: pointer;
-    }
-    section {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2em;
-      background: rgba(255,255,255,0.85);
-      border-radius: 8px;
-      z-index: 1;
-      position: relative;
-    }
-    h1 {
-      text-align: center;
-    }
-    ul { padding-left: 1.2em; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoShuyuan - 新书院</title>
+    <style>
+        /* 全局样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Serif SC', serif;
+            background-color: rgba(240, 248, 255, 0.3); /* 透明水色背景 */
+            color: #333;
+            overflow-x: hidden;
+            background-image: url('https://example.com/rice-paper-texture.png');
+            background-blend-mode: overlay;
+        }
+
+        /* 水墨动画容器 */
+        #ink-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .ink-drop {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #000;
+            border-radius: 50%;
+            opacity: 0.8;
+            transform: translate(-50%, -50%);
+            animation: drop 3s ease-in forwards;
+        }
+
+        @keyframes drop {
+            0% {
+                transform: translate(-50%, -100px) scale(0.5);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-50%, 50vh) scale(1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translate(-50%, 100vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* 竹子装饰 */
+        .bamboo-left, .bamboo-right {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 150px;
+            opacity: 0.3;
+            z-index: -1;
+            background-size: contain;
+            background-repeat: repeat-y;
+        }
+
+        .bamboo-left {
+            left: 0;
+            background-image: url('https://example.com/bamboo-left.png');
+        }
+
+        .bamboo-right {
+            right: 0;
+            background-image: url('https://example.com/bamboo-right.png');
+        }
+
+        /* 导航栏 */
+        nav {
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-button {
+            margin: 0 15px;
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-button:hover {
+            color: #8B4513;
+        }
+
+        .nav-button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #8B4513;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #5C3317;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        /* 底部控制栏 */
+        .footer-controls {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            padding: 15px 0;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .music-control, .language-switch {
+            margin: 0 20px;
+            padding: 8px 15px;
+            background: rgba(139, 69, 19, 0.7);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .music-control:hover, .language-switch:hover {
+            background: rgba(139, 69, 19, 1);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .bamboo-left, .bamboo-right {
+                width: 80px;
+            }
+            
+            .main-content {
+                margin: 30px 20px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- 水墨动画背景 -->
+    <div id="ink-container"></div>
+    
+    <!-- 竹子装饰 -->
+    <div class="bamboo-left"></div>
+    <div class="bamboo-right"></div>
+    
+    <!-- 导航栏 -->
+    <nav>
+        <button class="nav-button" data-en="AI Tools" data-zh="AI工具">AI Tools</button>
+        <button class="nav-button" data-en="Classics" data-zh="经典">Classics</button>
+        <button class="nav-button" data-en="Learning" data-zh="学习">Learning</button>
+        <button class="nav-button" data-en="Culture" data-zh="文化">Culture</button>
+    </nav>
+    
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
+        
+        <div id="personal-intro">
+            <p data-en="I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions." 
+               data-zh="我幼时曾就读于传统书院，每日功课包括背诵《三字经》和临摹甲骨文。">
+                I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions.
+            </p>
+            
+            <p data-en="Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright)." 
+               data-zh="老师向我们展示'日'如何演变为'明'这样的概念。">
+                Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright).
+            </p>
+            
+            <p data-en="When I encountered programming later, I found its structure oddly similar to Classical Chinese." 
+               data-zh="后来接触编程时，我发现其结构与文言文惊人地相似。">
+                When I encountered programming later, I found its structure oddly similar to Classical Chinese.
+            </p>
+            
+            <p data-en="Now, here are tools to reinterpret ancient math:" 
+               data-zh="现在，这里有一些重新诠释古代数学的工具：">
+                Now, here are tools to reinterpret ancient math:
+            </p>
+            
+            <ul style="text-align: left; display: inline-block;">
+                <li data-en="Transforming The Nine Chapters into modern expressions" 
+                    data-zh="将《九章算术》转化为现代表达式">
+                    Transforming The Nine Chapters into modern expressions
+                </li>
+                <li data-en="Visualizing links between Chinese characters and math notation" 
+                    data-zh="可视化汉字与数学符号之间的联系">
+                    Visualizing links between Chinese characters and math notation
+                </li>
+                <li data-en="Creating interactive animations for ancient problem solving" 
+                    data-zh="为古代解题方法创建交互式动画">
+                    Creating interactive animations for ancient problem solving
+                </li>
+            </ul>
+            
+            <p data-en="These tools are a bridge between tradition and technology." 
+               data-zh="这些工具是传统与技术之间的桥梁。">
+                These tools are a bridge between tradition and technology.
+            </p>
+        </div>
+    </div>
+    
+    <!-- 底部控制栏 -->
+    <div class="footer-controls">
+        <button class="music-control" id="music-toggle">
+            <span data-en="Play Guqin Music" data-zh="播放古琴音乐">Play Guqin Music</span>
+        </button>
+        <button class="language-switch" id="language-switch">中文 / English</button>
+    </div>
 
-<canvas id="ink"></canvas>
+    <!-- 古琴音乐 -->
+    <audio id="guqin-music" loop>
+        <source src="https://example.com/guqin-music.mp3" type="audio/mpeg">
+    </audio>
 
-<nav>
-  <a href="#ai-tools" class="nav">AI Tools</a>
-  <a href="#library" class="nav">Classics</a>
-  <a href="#learning" class="nav">Learning</a>
-  <a href="#culture" class="nav">Culture</a>
-  <button id="langBtn">中文</button>
-  <button id="musicBtn">🎵 Play Qin</button>
-</nav>
-
-<section>
-  <h1 id="title">Welcome to NeoShuyuan · Classical AI Lab</h1>
-  <p id="intro">
-    I studied at a traditional Chinese academy as a child. My daily lessons included reciting the <i>Three Character Classic</i> and copying oracle bone inscriptions.<br><br>
-    Our teacher showed us how ancient characters like “日” (sun) evolved into concepts like “明” (bright).<br><br>
-    When I encountered programming later, I found its structure oddly similar to Classical Chinese.<br><br>
-    Now, I develop tools to reinterpret ancient math:<br><br>
-    <ul>
-      <li>Transforming <i>The Nine Chapters</i> into modern expressions</li>
-      <li>Visualizing links between Chinese characters and math notation</li>
-      <li>Creating interactive animations for ancient problem solving</li>
-    </ul>
-    These tools are a bridge between tradition and technology.
-  </p>
-</section>
-
-<audio id="qinAudio" loop>
-  <source src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Guqin_example.ogg" type="audio/ogg">
-</audio>
-
-<script>
-  // 墨水扩散动画
-  const canvas = document.getElementById("ink");
-  const ctx = canvas.getContext("2d");
-  let drops = [];
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  function dropInk() {
-    drops.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: 0,
-      opacity: 1
-    });
-  }
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let d of drops) {
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(0, 0, 0, ${d.opacity})`;
-      ctx.fill();
-      d.radius += 0.5;
-      d.opacity -= 0.003;
-    }
-    drops = drops.filter(d => d.opacity > 0);
-    requestAnimationFrame(animate);
-  }
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
-  setInterval(dropInk, 1800);
-  animate();
-
-  // 古琴播放控制
-  const musicBtn = document.getElementById("musicBtn");
-  const audio = document.getElementById("qinAudio");
-  let playing = false;
-  musicBtn.addEventListener("click", () => {
-    playing = !playing;
-    if (playing) {
-      audio.play();
-      musicBtn.textContent = "🔇 Pause Qin";
-    } else {
-      audio.pause();
-      musicBtn.textContent = "🎵 Play Qin";
-    }
-  });
-
-  // 中英文切换
-  const langBtn = document.getElementById("langBtn");
-  let inEnglish = true;
-  langBtn.addEventListener("click", () => {
-    inEnglish = !inEnglish;
-    document.getElementById("title").textContent = inEnglish ?
-      "Welcome to NeoShuyuan · Classical AI Lab" : "欢迎来到 NeoShuyuan · 私塾AI实验室";
-    document.getElementById("intro").innerHTML = inEnglish ? `
-      I studied at a traditional Chinese academy as a child. My daily lessons included reciting the <i>Three Character Classic</i> and copying oracle bone inscriptions.<br><br>
-      Our teacher showed us how ancient characters like “日” (sun) evolved into concepts like “明” (bright).<br><br>
-      When I encountered programming later, I found its structure oddly similar to Classical Chinese.<br><br>
-      Now, I develop tools to reinterpret ancient math:<br><br>
-      <ul>
-        <li>Transforming <i>The Nine Chapters</i> into modern expressions</li>
-        <li>Visualizing links between Chinese characters and math notation</li>
-        <li>Creating interactive animations for ancient problem solving</li>
-      </ul>
-      These tools are a bridge between tradition and technology.
-    ` : `
-      我从小在私塾学习，每天诵读《三字经》，临摹甲骨文。<br><br>
-      老师教我们如何从“日”演变出“明”等概念。<br><br>
-      接触编程后，我发现它的结构与文言文奇妙地相似。<br><br>
-      现在，我正在开发一些工具来重新解读古代数学：<br><br>
-      <ul>
-        <li>将《九章算术》转化为现代数学表达</li>
-        <li>展示汉字演变与数学符号的联系</li>
-        <li>制作交互动画解答古代问题</li>
-      </ul>
-      这些工具是传统与科技之间的桥梁。
-    `;
-    langBtn.textContent = inEnglish ? "中文" : "English";
-  });
-</script>
-
+    <script>
+        // 水墨动画
+        function createInkDrop() {
+            const container = document.getElementById('ink-container');
+            const drop = document.createElement('div');
+            drop.className = 'ink-drop';
+            
+            // 随机位置
+            const xPos = Math.random() * 100;
+            drop.style.left = `${xPos}%`;
+            
+            // 随机大小
+            const size = 0.5 + Math.random() * 1.5;
+            drop.style.width = `${size * 10}px`;
+            drop.style.height = `${size * 10}px`;
+            
+            container.appendChild(drop);
+            
+            // 动画结束后移除元素
+            setTimeout(() => {
+                drop.remove();
+            }, 3000);
+        }
+        
+        // 定期创建水墨滴
+        setInterval(createInkDrop, 4000);
+        
+        // 初始创建几个水墨滴
+        for (let i = 0; i < 3; i++) {
+            setTimeout(createInkDrop, i * 1000);
+        }
+        
+        // 音乐控制
+        const musicToggle = document.getElementById('music-toggle');
+        const guqinMusic = document.getElementById('guqin-music');
+        let isPlaying = false;
+        
+        musicToggle.addEventListener('click', () => {
+            if (isPlaying) {
+                guqinMusic.pause();
+                musicToggle.querySelector('span').textContent = 
+                    document.documentElement.lang === 'zh' ? '播放古琴音乐' : 'Play Guqin Music';
+            } else {
+                guqinMusic.play();
+                musicToggle.querySelector('span').textContent = 
+                    document.documentElement.lang === 'zh' ? '暂停音乐' : 'Pause Music';
+            }
+            isPlaying = !isPlaying;
+        });
+        
+        // 语言切换
+        const languageSwitch = document.getElementById('language-switch');
+        let currentLang = 'en';
+        document.documentElement.lang = currentLang;
+        
+        languageSwitch.addEventListener('click', () => {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            document.documentElement.lang = currentLang;
+            
+            // 切换所有可翻译元素
+            document.querySelectorAll('[data-en], [data-zh]').forEach(element => {
+                if (element.tagName === 'OPTION') return; // 跳过option元素
+                
+                const text = currentLang === 'en' ? 
+                    element.getAttribute('data-en') : 
+                    element.getAttribute('data-zh');
+                
+                if (element.hasAttribute('data-en') && element.hasAttribute('data-zh')) {
+                    element.textContent = text;
+                }
+            });
+            
+            // 更新按钮文本
+            languageSwitch.textContent = currentLang === 'en' ? '中文 / English' : 'English / 中文';
+            
+            // 更新音乐按钮文本
+            if (isPlaying) {
+                musicToggle.querySelector('span').textContent = 
+                    currentLang === 'zh' ? '暂停音乐' : 'Pause Music';
+            } else {
+                musicToggle.querySelector('span').textContent = 
+                    currentLang === 'zh' ? '播放古琴音乐' : 'Play Guqin Music';
+            }
+        });
+    </script>
 </body>
 </html>
