@@ -52,3 +52,60 @@
                 opacity: 0;
             }
         }
+    </style>
+</head>
+<body>
+    <!-- 水墨晕染效果容器 -->
+    <div id="ink-container"></div>
+    
+    <!-- 页面内容 -->
+    <!-- ...其他内容保持不变... -->
+
+    <script>
+        // 水墨晕染效果脚本
+        document.addEventListener('DOMContentLoaded', function() {
+            const inkContainer = document.getElementById('ink-container');
+            
+            function createInkBlot(x, y) {
+                const inkBlot = document.createElement('div');
+                inkBlot.className = 'ink-blot';
+                
+                // 随机大小
+                const size = Math.random() * 200 + 100;
+                inkBlot.style.width = `${size}px`;
+                inkBlot.style.height = `${size}px`;
+                
+                // 设置位置
+                inkBlot.style.left = `${x}px`;
+                inkBlot.style.top = `${y}px`;
+                
+                // 随机颜色 - 水墨风格
+                const hue = Math.random() * 20 + 200; // 偏向蓝黑色调
+                const saturation = Math.random() * 30 + 20;
+                inkBlot.style.background = `radial-gradient(circle, hsla(${hue}, ${saturation}%, 10%, 0.8) 0%, hsla(${hue}, ${saturation}%, 5%, 0) 80%)`;
+                
+                inkContainer.appendChild(inkBlot);
+                
+                // 动画结束后移除元素
+                setTimeout(() => {
+                    inkBlot.remove();
+                }, 8000);
+            }
+            
+            // 点击时创建水墨晕染
+            document.addEventListener('click', function(e) {
+                createInkBlot(e.clientX, e.clientY);
+            });
+            
+            // 初始随机水墨效果
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight;
+                    createInkBlot(x, y);
+                }, i * 1000);
+            }
+        });
+    </script>
+</body>
+</html>
