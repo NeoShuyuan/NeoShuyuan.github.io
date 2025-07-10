@@ -28,7 +28,19 @@
       top: 0;
       left: 0;
       pointer-events: none;
-      z-index: 10;
+      z-index: 5;
+    }
+
+    #ink-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 4;
+      background: radial-gradient(circle at 30% 30%, rgba(0,0,0,0.03), transparent 60%),
+                  radial-gradient(circle at 70% 70%, rgba(0,0,0,0.03), transparent 60%);
     }
 
     nav {
@@ -86,8 +98,8 @@
   </style>
 </head>
 <body>
-
   <canvas id="particles"></canvas>
+  <div id="ink-container"></div>
 
   <nav>
     <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
@@ -97,4 +109,91 @@
   </nav>
 
   <div class="main-content">
-    <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来
+    <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
+    <p data-en="I studied at a traditional Chinese academy as a child..."
+       data-zh="我幼时曾就读于传统书院...">
+       I studied at a traditional Chinese academy as a child...
+    </p>
+    <p data-en="Our teacher showed us how ancient characters like '日'..."
+       data-zh="老师向我们展示'日'如何演变...">
+       Our teacher showed us how ancient characters like '日'...
+    </p>
+    <ul>
+      <li data-en="Transforming The Nine Chapters..." data-zh="将《九章算术》...">Transforming The Nine Chapters...</li>
+      <li data-en="Visualizing links..." data-zh="可视化汉字与数学符号之间的联系">Visualizing links...</li>
+      <li data-en="Creating interactive animations..." data-zh="为古代解题方法创建交互式动画">Creating interactive animations...</li>
+    </ul>
+    <p data-en="These tools are a bridge..." data-zh="这些工具是传统与技术之间的桥梁。">These tools are a bridge...</p>
+  </div>
+
+  <div class="footer-controls">
+    <button class="music-control" id="music-toggle">Pause Music</button>
+    <button class="language-switch" id="language-switch">中文 / English</button>
+  </div>
+
+  <audio id="guqin-music" loop autoplay>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_78b34740b0.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const music = document.getElementById('guqin-music');
+    const musicBtn = document.getElementById('music-toggle');
+    musicBtn.onclick = () => {
+      if (music.paused) {
+        music.play();
+        musicBtn.textContent = "Pause Music";
+      } else {
+        music.pause();
+        musicBtn.textContent = "Play Music";
+      }
+    };
+
+    let lang = 'en';
+    document.getElementById('language-switch').onclick = () => {
+      lang = lang === 'en' ? 'zh' : 'en';
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+    };
+
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+
+    const particles = [];
+    function createParticle() {
+      particles.push({
+        x: Math.random() * w,
+        y: h + 10,
+        size: Math.random() * 2 + 1,
+        speed: Math.random() * 1 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2
+      });
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(180, 130, 255, ${p.opacity})`;
+        ctx.fill();
+        p.y -= p.speed;
+        if (p.y < -10) particles.splice(i, 1);
+      }
+      while (particles.length < 150) {
+        createParticle();
+      }
+      requestAnimationFrame(drawParticles);
+    }
+    drawParticles();
+
+    window.onresize = () => {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    };
+  </script>
+</body>
+</html>
