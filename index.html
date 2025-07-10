@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -17,10 +17,10 @@
       margin: 0;
       padding: 0;
       font-family: 'Noto Serif SC', serif;
-      background-color: #fdfcf8;
-      color: #222;
+      background: url('b1019510-4173-4cb2-b399-f5c90cb506c5.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #111;
       overflow-x: hidden;
-      background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     }
 
     #ink-container {
@@ -30,15 +30,17 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 0;
+      z-index: 1;
     }
 
     nav {
       display: flex;
       justify-content: center;
+      align-items: center;
+      gap: 20px;
       padding: 20px;
-      background-color: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(5px);
+      background-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(3px);
       position: fixed;
       width: 100%;
       top: 0;
@@ -46,25 +48,35 @@
     }
 
     .nav-button {
-      margin: 0 15px;
       background: none;
       border: none;
       font-size: 1rem;
       cursor: pointer;
     }
 
-    .main-content {
-      max-width: 800px;
-      margin: 120px auto 50px;
-      padding: 30px;
-      text-align: center;
-      background-color: transparent !important;
-      color: #222;
+    .nav-button:last-child {
+      margin-left: auto;
+      margin-right: 20px;
     }
 
-    ul {
-      list-style: none;
-      padding-left: 0;
+    .main-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin: 0;
+      color: #111;
+      background-color: rgba(255, 255, 255, 0.3);
+      padding: 20px 40px;
+      border-radius: 16px;
+      backdrop-filter: blur(4px);
     }
 
     .footer-controls {
@@ -74,19 +86,20 @@
       display: flex;
       justify-content: center;
       gap: 20px;
-      background: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.6);
       padding: 10px;
       backdrop-filter: blur(4px);
       z-index: 1000;
     }
 
     .music-control, .language-switch {
-      background-color: #8B4513;
+      background-color: #4b3621;
       color: white;
       padding: 8px 16px;
       border: none;
       border-radius: 20px;
     }
+
   </style>
 </head>
 <body>
@@ -94,40 +107,15 @@
   <canvas id="ink-container"></canvas>
 
   <nav>
-    <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
-    <button class="nav-button" data-en="Classics" data-zh="古籍">Classics</button>
-    <button class="nav-button" data-en="Learning" data-zh="学习">Learning</button>
-    <button class="nav-button" data-en="Culture" data-zh="文化">Culture</button>
+    <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI解题工具</button>
+    <button class="nav-button" data-en="Classics" data-zh="古籍">古籍</button>
+    <button class="nav-button" data-en="Learning" data-zh="学习">学习</button>
+    <button class="nav-button" data-en="Culture" data-zh="文化">文化</button>
+    <button class="nav-button" onclick="location.href='./profile.html'" data-en="Profile" data-zh="个人">个人</button>
   </nav>
 
   <div class="main-content">
-    <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
-    <p data-en="I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions."
-       data-zh="我幼时曾就读于传统书院，每日功课包括背诵《三字经》和临摹甲骨文。">
-       I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions.
-    </p>
-    <p data-en="Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright)."
-       data-zh="老师向我们展示'日'如何演变为'明'这样的概念。">
-       Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright).
-    </p>
-    <p data-en="When I encountered programming later, I found its structure oddly similar to Classical Chinese."
-       data-zh="后来接触编程时，我发现其结构与文言文惊人地相似。">
-       When I encountered programming later, I found its structure oddly similar to Classical Chinese.
-    </p>
-    <p data-en="Now, here are tools to reinterpret ancient math:"
-       data-zh="现在，这里有一些重新诠释古代数学的工具：">
-       Now, here are tools to reinterpret ancient math:
-    </p>
-    <ul>
-      <li data-en="Transforming The Nine Chapters into modern expressions"
-          data-zh="将《九章算术》转化为现代表达式">Transforming The Nine Chapters into modern expressions</li>
-      <li data-en="Visualizing links between Chinese characters and math notation"
-          data-zh="可视化汉字与数学符号之间的联系">Visualizing links between Chinese characters and math notation</li>
-      <li data-en="Creating interactive animations for ancient problem solving"
-          data-zh="为古代解题方法创建交互式动画">Creating interactive animations for ancient problem solving</li>
-    </ul>
-    <p data-en="These tools are a bridge between tradition and technology."
-       data-zh="这些工具是传统与技术之间的桥梁。">These tools are a bridge between tradition and technology.</p>
+    <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">欢迎来到新书院</h1>
   </div>
 
   <div class="footer-controls">
@@ -135,77 +123,73 @@
     <button class="language-switch" id="language-switch">中文 / English</button>
   </div>
 
-  <audio id="guqin-music" loop autoplay preload="auto">
-    <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg">
+  <audio id="guqin-music" autoplay loop>
+    <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const music = document.getElementById('guqin-music');
-      const musicBtn = document.getElementById('music-toggle');
+    const music = document.getElementById('guqin-music');
+    const musicBtn = document.getElementById('music-toggle');
+    musicBtn.onclick = () => {
+      if (music.paused) {
+        music.play();
+        musicBtn.textContent = "Pause Music";
+      } else {
+        music.pause();
+        musicBtn.textContent = "Play Music";
+      }
+    };
 
-      musicBtn.onclick = () => {
-        if (music.paused) {
-          music.play();
-          musicBtn.textContent = "Pause Music";
-        } else {
-          music.pause();
-          musicBtn.textContent = "Play Music";
+    let lang = 'zh';
+    document.getElementById('language-switch').onclick = () => {
+      lang = lang === 'en' ? 'zh' : 'en';
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+    };
+
+    const canvas = document.getElementById('ink-container');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let drops = [];
+
+    function createDrop() {
+      drops.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: 0,
+        alpha: 0.95,
+        maxR: 180 + Math.random() * 80
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drops.forEach((drop, index) => {
+        drop.r += 0.8;
+        drop.alpha *= 0.983;
+        if (drop.r > drop.maxR || drop.alpha < 0.01) {
+          drops.splice(index, 1);
+          return;
         }
-      };
 
-      let lang = 'en';
-      document.getElementById('language-switch').onclick = () => {
-        lang = lang === 'en' ? 'zh' : 'en';
-        document.querySelectorAll('[data-en]').forEach(el => {
-          el.textContent = el.getAttribute(`data-${lang}`);
-        });
-      };
+        const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
+        gradient.addColorStop(0, `rgba(0, 20, 5, ${drop.alpha})`);
+        gradient.addColorStop(1, 'rgba(0, 20, 5, 0)');
 
-      // 动态墨水晕染动画
-      const canvas = document.getElementById('ink-container');
-      const ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+        ctx.beginPath();
+        ctx.fillStyle = gradient;
+        ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
+        ctx.fill();
+      });
 
-      let drops = [];
+      requestAnimationFrame(animate);
+    }
 
-      function createDrop() {
-        drops.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: 0,
-          alpha: 0.85,
-          maxR: 200 + Math.random() * 100,
-        });
-      }
-
-      function animate() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drops.forEach((drop, index) => {
-          drop.r += 0.8;
-          drop.alpha *= 0.985;
-
-          if (drop.r > drop.maxR || drop.alpha < 0.01) {
-            drops.splice(index, 1);
-            return;
-          }
-
-          const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
-          gradient.addColorStop(0, `rgba(0, 20, 5, ${drop.alpha})`);
-          gradient.addColorStop(1, 'rgba(0, 20, 5, 0)');
-
-          ctx.beginPath();
-          ctx.fillStyle = gradient;
-          ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
-          ctx.fill();
-        });
-        requestAnimationFrame(animate);
-      }
-
-      setInterval(createDrop, 1500);
-      animate();
-    });
+    setInterval(createDrop, 3000);
+    animate();
   </script>
 </body>
 </html>
