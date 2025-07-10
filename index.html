@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,31 +7,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
       scrollbar-width: none;
     }
     *::-webkit-scrollbar {
       display: none;
     }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
+    body {
+      margin: 0;
+      padding: 0;
       font-family: 'Noto Serif SC', serif;
-    }
-
-    /* ✅ 全屏拉伸背景图 */
-    #bg-img {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: fill;
-      z-index: -2;
+      background: url('bd837b31-8c7b-474b-9809-efda243706a0.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #111;
+      overflow-x: hidden;
     }
 
     #ink-container {
@@ -41,7 +30,7 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: -1;
+      z-index: 1;
     }
 
     nav {
@@ -50,13 +39,13 @@
       align-items: center;
       gap: 60px;
       padding: 30px 0;
+      background-color: transparent;
       font-size: 1.3rem;
       font-weight: 500;
       position: fixed;
       width: 100%;
       top: 0;
-      z-index: 10;
-      background: transparent;
+      z-index: 1000;
     }
 
     .nav-button {
@@ -78,14 +67,18 @@
       justify-content: center;
       height: 100vh;
       text-align: center;
-      z-index: 5;
+      z-index: 2;
       position: relative;
     }
 
     h1 {
       font-size: 3.2rem;
+      margin: 0;
       color: #111;
-      font-weight: bold;
+      background-color: rgba(255, 255, 255, 0.4);
+      padding: 20px 50px;
+      border-radius: 16px;
+      backdrop-filter: blur(4px);
     }
 
     .footer-controls {
@@ -95,9 +88,10 @@
       display: flex;
       justify-content: center;
       gap: 20px;
-      background: transparent;
+      background: rgba(255, 255, 255, 0.6);
       padding: 10px;
-      z-index: 10;
+      backdrop-filter: blur(4px);
+      z-index: 1000;
     }
 
     .music-control, .language-switch {
@@ -106,52 +100,39 @@
       padding: 8px 16px;
       border: none;
       border-radius: 20px;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <!-- ✅ 背景图：全屏拉伸显示 -->
-  <img id="bg-img" src="Image_20250710105042.jpg" alt="background" />
-
-  <!-- ✅ 墨水 canvas -->
   <canvas id="ink-container"></canvas>
 
-  <!-- ✅ 顶部导航栏 -->
   <nav>
-    <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
-    <button class="nav-button" data-en="Classics" data-zh="古籍">Classics</button>
-    <button class="nav-button" data-en="Learning" data-zh="学习">Learning</button>
-    <button class="nav-button" data-en="Culture" data-zh="文化">Culture</button>
-    <button class="nav-button" onclick="location.href='./profile.html'" data-en="Profile" data-zh="个人">Profile</button>
+    <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI解题工具</button>
+    <button class="nav-button" data-en="Classics" data-zh="古籍">古籍</button>
+    <button class="nav-button" data-en="Learning" data-zh="学习">学习</button>
+    <button class="nav-button" data-en="Culture" data-zh="文化">文化</button>
+    <button class="nav-button" onclick="location.href='./profile.html'" data-en="Profile" data-zh="个人">个人</button>
   </nav>
 
-  <!-- ✅ 欢迎语 -->
   <div class="main-content">
-    <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
+    <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">欢迎来到新书院</h1>
   </div>
 
-  <!-- ✅ 音乐和语言控制 -->
   <div class="footer-controls">
-    <button class="music-control" id="music-toggle">Play Music</button>
+    <button class="music-control" id="music-toggle">Pause Music</button>
     <button class="language-switch" id="language-switch">中文 / English</button>
   </div>
 
-  <!-- ✅ 背景音乐 -->
-  <audio id="guqin-music">
+  <audio id="guqin-music" autoplay>
     <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
     const music = document.getElementById('guqin-music');
     const musicBtn = document.getElementById('music-toggle');
-    const langBtn = document.getElementById('language-switch');
 
-    // 默认暂停音乐
-    music.pause();
-    musicBtn.textContent = "Play Music";
-
+    // 播放/暂停按钮控制
     musicBtn.onclick = () => {
       if (music.paused) {
         music.play();
@@ -162,21 +143,22 @@
       }
     };
 
-    // 默认语言英文
-    let lang = 'en';
-    function updateLanguage() {
+    // 补充 loop 保底机制
+    music.addEventListener('ended', () => {
+      music.currentTime = 0;
+      music.play();
+    });
+
+    // 语言切换
+    let lang = 'zh';
+    document.getElementById('language-switch').onclick = () => {
+      lang = lang === 'en' ? 'zh' : 'en';
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${lang}`);
       });
-    }
-    updateLanguage();
-
-    langBtn.onclick = () => {
-      lang = lang === 'en' ? 'zh' : 'en';
-      updateLanguage();
     };
 
-    // ✅ 改进版墨水动画（避免闪烁）
+    // 墨水滴动画
     const canvas = document.getElementById('ink-container');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -196,28 +178,24 @@
 
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      let newDrops = [];
-
-      for (let i = 0; i < drops.length; i++) {
-        let drop = drops[i];
+      drops.forEach((drop, index) => {
         drop.r += 0.8;
         drop.alpha *= 0.983;
-
-        if (drop.r <= drop.maxR && drop.alpha >= 0.01) {
-          newDrops.push(drop);
-
-          const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
-          gradient.addColorStop(0, `rgba(0, 20, 5, ${drop.alpha})`);
-          gradient.addColorStop(1, 'rgba(0, 20, 5, 0)');
-
-          ctx.beginPath();
-          ctx.fillStyle = gradient;
-          ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
-          ctx.fill();
+        if (drop.r > drop.maxR || drop.alpha < 0.01) {
+          drops.splice(index, 1);
+          return;
         }
-      }
 
-      drops = newDrops;
+        const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
+        gradient.addColorStop(0, `rgba(0, 20, 5, ${drop.alpha})`);
+        gradient.addColorStop(1, 'rgba(0, 20, 5, 0)');
+
+        ctx.beginPath();
+        ctx.fillStyle = gradient;
+        ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
+        ctx.fill();
+      });
+
       requestAnimationFrame(animate);
     }
 
