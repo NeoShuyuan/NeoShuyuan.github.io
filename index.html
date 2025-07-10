@@ -9,43 +9,42 @@
       margin: 0;
       padding: 0;
       font-family: 'Noto Serif SC', serif;
-      color: #1d1d1f;
-      background-color: #f8f4e9;
+      background-color: #F8F4E9;
       overflow-x: hidden;
+    }
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
     }
     body::before, body::after {
       content: "";
       position: fixed;
       top: 0;
-      width: 80px;
+      width: 100px;
       height: 100%;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Bamboo_pattern.svg/2560px-Bamboo_pattern.svg.png') no-repeat center center;
+      background-repeat: no-repeat;
       background-size: cover;
+      z-index: -1;
       opacity: 0.5;
-      z-index: 0;
     }
     body::before {
       left: 0;
+      background-image: url('https://i.imgur.com/2yIaE3Q.png');
     }
     body::after {
       right: 0;
-      transform: scaleX(-1);
-    }
-    canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
+      background-image: url('https://i.imgur.com/2yIaE3Q.png');
     }
     nav {
       text-align: center;
       padding: 1em;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255,255,255,0.9);
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 100;
     }
     nav a {
       margin: 1em;
@@ -54,96 +53,121 @@
       font-weight: bold;
       font-size: 18px;
     }
+    .lang-toggle {
+      position: absolute;
+      top: 1.2em;
+      right: 1.2em;
+      font-size: 14px;
+      background: #9C4A1A;
+      color: white;
+      border: none;
+      padding: 0.4em 0.8em;
+      cursor: pointer;
+    }
     section {
       padding: 3em 10%;
-      position: relative;
-      z-index: 1;
+      background-color: rgba(255,255,255,0.95);
     }
     h1 {
-      font-size: 2.5em;
+      font-size: 2.2em;
       text-align: center;
       margin-bottom: 1em;
+      color: #111;
     }
-    p, li {
-      font-size: 1.2em;
+    p, ul {
+      font-size: 1.1em;
       line-height: 1.8;
+      color: #333;
     }
-    ul {
-      padding-left: 1.5em;
+    audio {
+      position: fixed;
+      bottom: 1em;
+      right: 1em;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
+
 <canvas id="ink"></canvas>
 
 <nav>
-  <a href="#ai-tools">AI Tools</a>
-  <a href="#classics">Classics</a>
-  <a href="#learning">Learning</a>
-  <a href="#culture">Culture</a>
+  <a href="#ai-tools" data-en="AI Tools" data-zh="AI工具">AI Tools</a>
+  <a href="#classics" data-en="Classics" data-zh="古籍图书馆">Classics</a>
+  <a href="#learning" data-en="Learning" data-zh="学习中心">Learning</a>
+  <a href="#culture" data-en="Culture" data-zh="文化实验室">Culture</a>
+  <button class="lang-toggle" onclick="toggleLanguage()">中文</button>
 </nav>
 
 <section>
-  <h1>Welcome to NeoShuyuan · Classical AI Studio</h1>
-  <p>
+  <h1 data-en="Welcome to NeoShuyuan · Classical AI Studio" data-zh="欢迎来到NeoShuyuan · 私塾AI实验">Welcome to NeoShuyuan · Classical AI Studio</h1>
+  <p data-en="I studied at a traditional Chinese academy..." data-zh="我从小在私塾学习，没有经历过传统小学...">
     I studied at a traditional Chinese academy as a child, without attending a regular primary school. My daily lessons included reciting the <i>Three Character Classic</i> and the <i>Thousand Character Essay</i>, and copying oracle bone and bronze inscriptions with a brush.
-  </p>
-  <p>
+    <br><br>
     We were taught to understand how ancient people thought through the evolution of Chinese characters. For example, the character "日" originated as a pictograph of the sun, and "明" (bright) combines "日" (sun) and "月" (moon).
-  </p>
-  <p>
+    <br><br>
     Later, when I encountered computers and programming, I was amazed to find a strange similarity between the compact structure of classical Chinese and programming languages. This discovery inspired me to use technology to interpret classical texts, especially ancient mathematical works.
-  </p>
-  <p>
-    I'm now developing a series of tools:
-  </p>
-  <ul>
-    <li>Converting classical math problems from <i>The Nine Chapters</i> into modern math notation</li>
-    <li>Visualizing the connection between character evolution and math symbols</li>
-    <li>Creating interactive animated solutions for ancient math problems</li>
-  </ul>
-  <p>
+    <br><br>
+    I’m now developing a series of tools:
+    <ul>
+      <li>Converting classical math problems from <i>The Nine Chapters</i> into modern math notation</li>
+      <li>Visualizing the connection between character evolution and math symbols</li>
+      <li>Creating interactive animated solutions for ancient math problems</li>
+    </ul>
     These projects are not meant to replace traditional learning, but to build a bridge that makes this cultural treasure more accessible.
   </p>
 </section>
+
+<audio controls loop>
+  <source src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Guqin_sample.ogg" type="audio/ogg">
+  Your browser does not support the audio element.
+</audio>
 
 <script>
   const canvas = document.getElementById("ink");
   const ctx = canvas.getContext("2d");
   let drops = [];
-
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
-
   function dropInk() {
     drops.push({
       x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height * 0.8 + canvas.height * 0.1,
+      y: Math.random() * canvas.height,
       radius: 0,
-      opacity: 0.7 + Math.random() * 0.3
+      opacity: 0.6 + Math.random() * 0.4
     });
   }
-
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let d of drops) {
+    for (let i = 0; i < drops.length; i++) {
+      let d = drops[i];
       ctx.beginPath();
       ctx.arc(d.x, d.y, d.radius, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(0, 0, 0, ${d.opacity})`;
       ctx.fill();
-      d.radius += 0.5;
-      d.opacity -= 0.002;
+      d.radius += 0.8;
+      d.opacity -= 0.0015;
     }
     drops = drops.filter(d => d.opacity > 0);
     requestAnimationFrame(animate);
   }
-
   resizeCanvas();
   window.addEventListener("resize", resizeCanvas);
-  setInterval(dropInk, 500);
+  setInterval(dropInk, 1000);
   animate();
+
+  function toggleLanguage() {
+    const all = document.querySelectorAll('[data-en]');
+    const isEnglish = document.documentElement.lang === 'en';
+    document.documentElement.lang = isEnglish ? 'zh' : 'en';
+    all.forEach(el => {
+      el.innerHTML = isEnglish ? el.dataset.zh : el.dataset.en;
+    });
+    document.querySelector('.lang-toggle').innerText = isEnglish ? 'English' : '中文';
+  }
 </script>
+
 </body>
 </html>
