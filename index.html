@@ -16,14 +16,22 @@
       display: none;
     }
 
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       font-family: 'Noto Serif SC', serif;
-      background: url('Image_20250710102436.jpg') no-repeat center center fixed;
-      background-size: 100% 100%; /* ✅ 拉伸填满页面，完整显示整张图 */
-      color: #111;
-      overflow-x: hidden;
-      height: 100vh;
+    }
+
+    /* ✅ 全屏拉伸背景图 */
+    #bg-img {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100vw;
+      height: 100vh;
+      object-fit: fill;
+      z-index: -2;
     }
 
     #ink-container {
@@ -33,7 +41,7 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 1;
+      z-index: -1;
     }
 
     nav {
@@ -47,7 +55,7 @@
       position: fixed;
       width: 100%;
       top: 0;
-      z-index: 1000;
+      z-index: 10;
       background: transparent;
     }
 
@@ -70,7 +78,7 @@
       justify-content: center;
       height: 100vh;
       text-align: center;
-      z-index: 2;
+      z-index: 5;
       position: relative;
     }
 
@@ -89,7 +97,7 @@
       gap: 20px;
       background: transparent;
       padding: 10px;
-      z-index: 1000;
+      z-index: 10;
     }
 
     .music-control, .language-switch {
@@ -104,8 +112,13 @@
 </head>
 <body>
 
+  <!-- ✅ 背景图：全屏拉伸显示 -->
+  <img id="bg-img" src="Image_20250710102436.jpg" alt="background" />
+
+  <!-- ✅ 墨水 canvas -->
   <canvas id="ink-container"></canvas>
 
+  <!-- ✅ 顶部导航栏 -->
   <nav>
     <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
     <button class="nav-button" data-en="Classics" data-zh="古籍">Classics</button>
@@ -114,15 +127,18 @@
     <button class="nav-button" onclick="location.href='./profile.html'" data-en="Profile" data-zh="个人">Profile</button>
   </nav>
 
+  <!-- ✅ 欢迎语 -->
   <div class="main-content">
     <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
   </div>
 
+  <!-- ✅ 音乐和语言控制 -->
   <div class="footer-controls">
     <button class="music-control" id="music-toggle">Play Music</button>
     <button class="language-switch" id="language-switch">中文 / English</button>
   </div>
 
+  <!-- ✅ 背景音乐 -->
   <audio id="guqin-music">
     <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg" />
   </audio>
@@ -160,7 +176,7 @@
       updateLanguage();
     };
 
-    // 墨滴动画
+    // ✅ 改进版墨水动画（避免闪烁）
     const canvas = document.getElementById('ink-container');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -180,24 +196,28 @@
 
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drops.forEach((drop, index) => {
+      let newDrops = [];
+
+      for (let i = 0; i < drops.length; i++) {
+        let drop = drops[i];
         drop.r += 0.8;
         drop.alpha *= 0.983;
-        if (drop.r > drop.maxR || drop.alpha < 0.01) {
-          drops.splice(index, 1);
-          return;
+
+        if (drop.r <= drop.maxR && drop.alpha >= 0.01) {
+          newDrops.push(drop);
+
+          const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
+          gradient.addColorStop(0, `rgba(0, 20, 5, ${drop.alpha})`);
+          gradient.addColorStop(1, 'rgba(0, 20, 5, 0)');
+
+          ctx.beginPath();
+          ctx.fillStyle = gradient;
+          ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
+          ctx.fill();
         }
+      }
 
-        const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
-        gradient.addColorStop(0, `rgba(0, 20, 5, ${drop.alpha})`);
-        gradient.addColorStop(1, 'rgba(0, 20, 5, 0)');
-
-        ctx.beginPath();
-        ctx.fillStyle = gradient;
-        ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
-        ctx.fill();
-      });
-
+      drops = newDrops;
       requestAnimationFrame(animate);
     }
 
