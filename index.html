@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#fdfcf8" />
   <title>NeoShuyuan - 新书院</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -21,16 +22,6 @@
       color: #222;
       overflow-x: hidden;
       background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-    }
-
-    #ink-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 0;
     }
 
     nav {
@@ -58,8 +49,6 @@
       margin: 120px auto 50px;
       padding: 30px;
       text-align: center;
-      background-color: transparent !important;
-      color: #222;
     }
 
     ul {
@@ -77,7 +66,6 @@
       background: rgba(255, 255, 255, 0.7);
       padding: 10px;
       backdrop-filter: blur(4px);
-      z-index: 1000;
     }
 
     .music-control, .language-switch {
@@ -86,6 +74,17 @@
       padding: 8px 16px;
       border: none;
       border-radius: 20px;
+      cursor: pointer;
+    }
+
+    #ink-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
     }
   </style>
 </head>
@@ -131,84 +130,87 @@
 </div>
 
 <div class="footer-controls">
-  <button class="music-control" id="music-toggle">Pause Music</button>
+  <button class="music-control" id="music-toggle">Play Music</button>
   <button class="language-switch" id="language-switch">中文 / English</button>
 </div>
 
-<audio id="guqin-music" loop preload="auto">
-  <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg">
+<audio id="guqin-music" loop muted>
+  <source src="https://cdn.pixabay.com/download/audio/2023/04/09/audio_f35fa47163.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const music = document.getElementById('guqin-music');
-    const musicBtn = document.getElementById('music-toggle');
-    musicBtn.onclick = () => {
-      if (music.paused) {
-        music.play();
-        musicBtn.textContent = "Pause Music";
-      } else {
-        music.pause();
-        musicBtn.textContent = "Play Music";
-      }
-    };
+  // 语言切换功能
+  let lang = 'en';
+  document.getElementById('language-switch').onclick = () => {
+    lang = lang === 'en' ? 'zh' : 'en';
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.textContent = el.getAttribute(`data-${lang}`);
+    });
+  };
 
-    music.play().catch(() => {
-      // 需要用户手动交互后播放
-      musicBtn.textContent = "Play Music";
+  // 音乐播放功能
+  const music = document.getElementById('guqin-music');
+  const musicToggle = document.getElementById('music-toggle');
+  music.volume = 0.6;
+
+  musicToggle.onclick = () => {
+    if (music.paused) {
+      music.muted = false;
+      music.play();
+      musicToggle.textContent = 'Pause Music';
+    } else {
+      music.pause();
+      musicToggle.textContent = 'Play Music';
+    }
+  };
+
+  // 动态墨水晕染动画（优化）
+  const canvas = document.getElementById('ink-container');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let drops = [];
+
+  function createDrop() {
+    drops.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: 0,
+      alpha: 0.5 + Math.random() * 0.2,
+      maxR: 200 + Math.random() * 100,
+      fade: 0.004 + Math.random() * 0.003
+    });
+  }
+
+  function animate() {
+    ctx.fillStyle = 'rgba(253, 252, 248, 0.03)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    drops.forEach((drop, index) => {
+      drop.r += 1.2;
+      drop.alpha -= drop.fade;
+
+      if (drop.r > drop.maxR || drop.alpha <= 0) {
+        drops.splice(index, 1);
+        return;
+      }
+
+      const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
+      gradient.addColorStop(0, `rgba(0, 50, 30, ${drop.alpha})`);
+      gradient.addColorStop(1, 'rgba(0, 50, 30, 0)');
+
+      ctx.beginPath();
+      ctx.fillStyle = gradient;
+      ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
+      ctx.fill();
     });
 
-    let lang = 'en';
-    document.getElementById('language-switch').onclick = () => {
-      lang = lang === 'en' ? 'zh' : 'en';
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
-      });
-    };
+    requestAnimationFrame(animate);
+  }
 
-    const canvas = document.getElementById('ink-container');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let drops = [];
-
-    function createDrop() {
-      drops.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: 1,
-        alpha: 0.95,
-        maxR: 250 + Math.random() * 100,
-      });
-    }
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drops.forEach((drop, index) => {
-        drop.r += 1.0;
-        drop.alpha *= 0.992;
-
-        if (drop.r > drop.maxR || drop.alpha < 0.01) {
-          drops.splice(index, 1);
-          return;
-        }
-
-        const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
-        gradient.addColorStop(0, `rgba(0, 20, 5, ${drop.alpha})`);
-        gradient.addColorStop(1, 'rgba(0, 20, 5, 0)');
-
-        ctx.beginPath();
-        ctx.fillStyle = gradient;
-        ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
-        ctx.fill();
-      });
-      requestAnimationFrame(animate);
-    }
-
-    setInterval(createDrop, 4000);
-    animate();
-  });
+  setInterval(createDrop, 2000);
+  animate();
 </script>
 
 </body>
