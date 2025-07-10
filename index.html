@@ -193,7 +193,7 @@
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drops.forEach((drop, index) => {
-      drop.r += 1.2;
+      drop.r += 1.8;
       drop.alpha *= 0.98;
 
       if (drop.r > drop.maxR || drop.alpha < 0.01) {
@@ -213,7 +213,7 @@
     requestAnimationFrame(animate);
   }
 
-  setInterval(createDrop, 3000);
+  setInterval(createDrop, 1800);
   animate();
 </script>
 
