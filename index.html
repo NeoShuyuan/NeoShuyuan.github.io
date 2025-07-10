@@ -12,7 +12,6 @@
     *::-webkit-scrollbar {
       display: none;
     }
-
     body {
       margin: 0;
       padding: 0;
@@ -22,7 +21,6 @@
       overflow-x: hidden;
       background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     }
-
     #ink-container {
       position: fixed;
       top: 0;
@@ -32,7 +30,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
     nav {
       display: flex;
       justify-content: center;
@@ -44,7 +41,6 @@
       top: 0;
       z-index: 1000;
     }
-
     .nav-button {
       margin: 0 15px;
       background: none;
@@ -52,7 +48,6 @@
       font-size: 1rem;
       cursor: pointer;
     }
-
     .main-content {
       max-width: 800px;
       margin: 120px auto 50px;
@@ -61,12 +56,10 @@
       background-color: transparent !important;
       color: #222;
     }
-
     ul {
       list-style: none;
       padding-left: 0;
     }
-
     .footer-controls {
       position: fixed;
       bottom: 0;
@@ -79,7 +72,6 @@
       backdrop-filter: blur(4px);
       z-index: 1000;
     }
-
     .music-control, .language-switch {
       background-color: #8B4513;
       color: white;
@@ -90,20 +82,17 @@
   </style>
 </head>
 <body>
-
   <canvas id="ink-container"></canvas>
-
   <nav>
     <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
     <button class="nav-button" data-en="Classics" data-zh="古籍">Classics</button>
     <button class="nav-button" data-en="Learning" data-zh="学习">Learning</button>
     <button class="nav-button" data-en="Culture" data-zh="文化">Culture</button>
   </nav>
-
   <div class="main-content">
     <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
     <p data-en="I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions."
-       data-zh="我幼时曾就读于传统书院，每日功课包括背诵《三字经》和临摹甲骨文。">
+       data-zh="我幼时曾就读于传统书院，每日功课包括背诀㩜三字经㩝和临摸甲骨文。">
        I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions.
     </p>
     <p data-en="Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright)."
@@ -115,12 +104,12 @@
        When I encountered programming later, I found its structure oddly similar to Classical Chinese.
     </p>
     <p data-en="Now, here are tools to reinterpret ancient math:"
-       data-zh="现在，这里有一些重新诠释古代数学的工具：">
+       data-zh="现在，这里有些重新言释古代数学的工具：">
        Now, here are tools to reinterpret ancient math:
     </p>
     <ul>
       <li data-en="Transforming The Nine Chapters into modern expressions"
-          data-zh="将《九章算术》转化为现代表达式">Transforming The Nine Chapters into modern expressions</li>
+          data-zh="将《九章算术》转化为环环相链的环环表达式">Transforming The Nine Chapters into modern expressions</li>
       <li data-en="Visualizing links between Chinese characters and math notation"
           data-zh="可视化汉字与数学符号之间的联系">Visualizing links between Chinese characters and math notation</li>
       <li data-en="Creating interactive animations for ancient problem solving"
@@ -129,20 +118,22 @@
     <p data-en="These tools are a bridge between tradition and technology."
        data-zh="这些工具是传统与技术之间的桥梁。">These tools are a bridge between tradition and technology.</p>
   </div>
-
   <div class="footer-controls">
     <button class="music-control" id="music-toggle">Pause Music</button>
     <button class="language-switch" id="language-switch">中文 / English</button>
   </div>
-
-  <audio id="guqin-music" loop autoplay>
-    <source src="https://neoshuyuan.github.io/chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
+  <audio id="guqin-music" loop preload="auto">
+    <source src="./chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg">
   </audio>
-
   <script>
     const music = document.getElementById('guqin-music');
     const musicBtn = document.getElementById('music-toggle');
+    music.volume = 0.5;
+    document.addEventListener("DOMContentLoaded", () => {
+      music.play().catch(() => {
+        console.log("Autoplay blocked by browser.");
+      });
+    });
     musicBtn.onclick = () => {
       if (music.paused) {
         music.play();
@@ -152,7 +143,6 @@
         musicBtn.textContent = "Play Music";
       }
     };
-
     let lang = 'en';
     document.getElementById('language-switch').onclick = () => {
       lang = lang === 'en' ? 'zh' : 'en';
@@ -160,36 +150,32 @@
         el.textContent = el.getAttribute(`data-${lang}`);
       });
     };
-
-    // 墨水晕染动画
     const canvas = document.getElementById('ink-container');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     let drops = [];
-
     function createDrop() {
       drops.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         r: 0,
-        alpha: 0.6,
+        alpha: 0.85,
         maxR: 200 + Math.random() * 100,
       });
     }
-
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drops.forEach((drop, index) => {
         drop.r += 2.0;
-        drop.alpha *= 0.98;
+        drop.alpha *= 0.985;
         if (drop.r > drop.maxR || drop.alpha < 0.01) {
           drops.splice(index, 1);
           return;
         }
         const gradient = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
-        gradient.addColorStop(0, `rgba(0, 50, 30, ${drop.alpha})`);
-        gradient.addColorStop(1, 'rgba(0, 50, 30, 0)');
+        gradient.addColorStop(0, `rgba(0, 30, 10, ${drop.alpha})`);
+        gradient.addColorStop(1, 'rgba(0, 30, 10, 0)');
         ctx.beginPath();
         ctx.fillStyle = gradient;
         ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
@@ -197,8 +183,7 @@
       });
       requestAnimationFrame(animate);
     }
-
-    setInterval(createDrop, 1500);
+    setInterval(createDrop, 1000);
     animate();
   </script>
 </body>
