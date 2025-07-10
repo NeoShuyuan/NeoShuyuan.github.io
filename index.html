@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -6,6 +6,7 @@
   <title>NeoShuyuan - 新书院</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* 隐藏所有滚动条 */
     * {
       scrollbar-width: none;
     }
@@ -21,26 +22,6 @@
       color: #222;
       overflow-x: hidden;
       background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
-    }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      z-index: 5;
-    }
-
-    #ink-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 4;
-      background: radial-gradient(circle at 30% 30%, rgba(0,0,0,0.03), transparent 60%),
-                  radial-gradient(circle at 70% 70%, rgba(0,0,0,0.03), transparent 60%);
     }
 
     nav {
@@ -68,6 +49,11 @@
       margin: 120px auto 50px;
       padding: 30px;
       text-align: center;
+      background-color: transparent !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      color: #222;
     }
 
     ul {
@@ -85,7 +71,6 @@
       background: rgba(255, 255, 255, 0.7);
       padding: 10px;
       backdrop-filter: blur(4px);
-      z-index: 1000;
     }
 
     .music-control, .language-switch {
@@ -98,8 +83,6 @@
   </style>
 </head>
 <body>
-  <canvas id="particles"></canvas>
-  <div id="ink-container"></div>
 
   <nav>
     <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
@@ -110,20 +93,32 @@
 
   <div class="main-content">
     <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
-    <p data-en="I studied at a traditional Chinese academy as a child..."
-       data-zh="我幼时曾就读于传统书院...">
-       I studied at a traditional Chinese academy as a child...
+    <p data-en="I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions."
+       data-zh="我幼时曾就读于传统书院，每日功课包括背诵《三字经》和临摹甲骨文。">
+       I studied at a traditional Chinese academy as a child. My daily lessons included reciting the Three Character Classic and copying oracle bone inscriptions.
     </p>
-    <p data-en="Our teacher showed us how ancient characters like '日'..."
-       data-zh="老师向我们展示'日'如何演变...">
-       Our teacher showed us how ancient characters like '日'...
+    <p data-en="Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright)."
+       data-zh="老师向我们展示'日'如何演变为'明'这样的概念。">
+       Our teacher showed us how ancient characters like '日' (sun) evolved into concepts like '明' (bright).
+    </p>
+    <p data-en="When I encountered programming later, I found its structure oddly similar to Classical Chinese."
+       data-zh="后来接触编程时，我发现其结构与文言文惊人地相似。">
+       When I encountered programming later, I found its structure oddly similar to Classical Chinese.
+    </p>
+    <p data-en="Now, here are tools to reinterpret ancient math:"
+       data-zh="现在，这里有一些重新诠释古代数学的工具：">
+       Now, here are tools to reinterpret ancient math:
     </p>
     <ul>
-      <li data-en="Transforming The Nine Chapters..." data-zh="将《九章算术》...">Transforming The Nine Chapters...</li>
-      <li data-en="Visualizing links..." data-zh="可视化汉字与数学符号之间的联系">Visualizing links...</li>
-      <li data-en="Creating interactive animations..." data-zh="为古代解题方法创建交互式动画">Creating interactive animations...</li>
+      <li data-en="Transforming The Nine Chapters into modern expressions"
+          data-zh="将《九章算术》转化为现代表达式">Transforming The Nine Chapters into modern expressions</li>
+      <li data-en="Visualizing links between Chinese characters and math notation"
+          data-zh="可视化汉字与数学符号之间的联系">Visualizing links between Chinese characters and math notation</li>
+      <li data-en="Creating interactive animations for ancient problem solving"
+          data-zh="为古代解题方法创建交互式动画">Creating interactive animations for ancient problem solving</li>
     </ul>
-    <p data-en="These tools are a bridge..." data-zh="这些工具是传统与技术之间的桥梁。">These tools are a bridge...</p>
+    <p data-en="These tools are a bridge between tradition and technology."
+       data-zh="这些工具是传统与技术之间的桥梁。">These tools are a bridge between tradition and technology.</p>
   </div>
 
   <div class="footer-controls">
@@ -132,7 +127,7 @@
   </div>
 
   <audio id="guqin-music" loop autoplay>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_78b34740b0.mp3" type="audio/mpeg">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -154,45 +149,6 @@
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${lang}`);
       });
-    };
-
-    const canvas = document.getElementById('particles');
-    const ctx = canvas.getContext('2d');
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
-
-    const particles = [];
-    function createParticle() {
-      particles.push({
-        x: Math.random() * w,
-        y: h + 10,
-        size: Math.random() * 2 + 1,
-        speed: Math.random() * 1 + 0.5,
-        opacity: Math.random() * 0.8 + 0.2
-      });
-    }
-
-    function drawParticles() {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(180, 130, 255, ${p.opacity})`;
-        ctx.fill();
-        p.y -= p.speed;
-        if (p.y < -10) particles.splice(i, 1);
-      }
-      while (particles.length < 150) {
-        createParticle();
-      }
-      requestAnimationFrame(drawParticles);
-    }
-    drawParticles();
-
-    window.onresize = () => {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
     };
   </script>
 </body>
