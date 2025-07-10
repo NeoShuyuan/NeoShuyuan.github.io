@@ -23,16 +23,6 @@
       background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
     }
 
-    #ink-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 0;
-    }
-
     nav {
       display: flex;
       justify-content: center;
@@ -59,6 +49,9 @@
       padding: 30px;
       text-align: center;
       background-color: transparent !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
       color: #222;
     }
 
@@ -77,7 +70,6 @@
       background: rgba(255, 255, 255, 0.7);
       padding: 10px;
       backdrop-filter: blur(4px);
-      z-index: 1000;
     }
 
     .music-control, .language-switch {
@@ -86,6 +78,16 @@
       padding: 8px 16px;
       border: none;
       border-radius: 20px;
+    }
+
+    #ink-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
     }
   </style>
 </head>
@@ -131,27 +133,50 @@
 </div>
 
 <div class="footer-controls">
-  <button class="music-control" id="music-toggle">Pause Music</button>
+  <button class="music-control" id="music-toggle">Play Music</button>
   <button class="language-switch" id="language-switch">中文 / English</button>
 </div>
 
-<audio id="guqin-music" loop autoplay>
-  <source src="https://cdn.jsdelivr.net/gh/stevenliuyi/music-host@main/moonlight-sonata.mp3" type="audio/mpeg">
+<audio id="guqin-music" loop preload="auto">
+  <source src="https://cdn.pixabay.com/download/audio/2023/03/31/audio_e72f2b6ef6.mp3" type="audio/mpeg">
 </audio>
 
-<script>
-  const music = document.getElementById('guqin-music');
-  const musicBtn = document.getElementById('music-toggle');
-  musicBtn.onclick = () => {
-    if (music.paused) {
-      music.play();
-      musicBtn.textContent = "Pause Music";
-    } else {
-      music.pause();
-      musicBtn.textContent = "Play Music";
-    }
-  };
+// 修改音乐控制部分代码如下
+const music = document.getElementById('guqin-music');
+const musicBtn = document.getElementById('music-toggle');
 
+// 确保音频加载
+music.load();
+
+let isPlaying = false;
+
+// 更可靠的播放控制
+musicBtn.addEventListener('click', async () => {
+  try {
+    if (isPlaying) {
+      await music.pause();
+      musicBtn.textContent = musicBtn.getAttribute(`data-${lang}`) || "Play Music";
+    } else {
+      await music.play();
+      musicBtn.textContent = "Pause Music";
+    }
+    isPlaying = !isPlaying;
+  } catch (error) {
+    console.error("音乐播放错误:", error);
+    // 备用方案：提示用户点击页面任意位置激活音频
+    if(error.name === 'NotAllowedError') {
+      alert("请先点击页面任意位置激活音频播放权限");
+    }
+  }
+});
+
+// 在语言切换时更新按钮文本
+document.getElementById('language-switch').addEventListener('click', () => {
+  if(musicBtn) {
+    musicBtn.textContent = isPlaying ? "Pause Music" : 
+      (musicBtn.getAttribute(`data-${lang}`) || "Play Music");
+  }
+});
   let lang = 'en';
   document.getElementById('language-switch').onclick = () => {
     lang = lang === 'en' ? 'zh' : 'en';
@@ -201,7 +226,7 @@
     requestAnimationFrame(animate);
   }
 
-  setInterval(createDrop, 2000);
+  setInterval(createDrop, 2300);
   animate();
 </script>
 </body>
