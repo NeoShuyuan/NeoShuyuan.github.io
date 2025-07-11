@@ -135,9 +135,12 @@
   <audio id="guqin-music" loop>
     <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg" />
   </audio>
-
+<audio id="click-sound">
+  <source src="5390.mp3" type="audio/mpeg" />
+</audio>
   <script>
     const music = document.getElementById('guqin-music');
+    const clickSound = document.getElementById('click-sound');
     const musicBtn = document.getElementById('music-toggle');
     const langBtn = document.getElementById('language-switch');
 
@@ -165,6 +168,12 @@
       lang = lang === 'en' ? 'zh' : 'en';
       updateLanguage();
     };
+    document.querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    clickSound.currentTime = 0;
+    clickSound.play();
+  });
+});
 
     const canvas = document.getElementById('ink-container');
     const ctx = canvas.getContext('2d');
