@@ -226,3 +226,14 @@
   </script>
 </body>
 </html>
+
+// 点击屏幕时墨水生成
+window.addEventListener('click', function (e) {
+  drops.push({
+    x: e.clientX,
+    y: e.clientY,
+    r: 0,
+    alpha: 0.95,
+    maxR: 180 + Math.random() * 80
+  });
+});
