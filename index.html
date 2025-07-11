@@ -23,7 +23,6 @@
       font-family: 'Noto Serif SC', serif;
     }
 
-    /* ✅ 全屏拉伸背景图 */
     #bg-img {
       position: fixed;
       top: 0;
@@ -112,13 +111,9 @@
 </head>
 <body>
 
-  <!-- ✅ 背景图：全屏拉伸显示 -->
   <img id="bg-img" src="Image_20250710105042.jpg" alt="background" />
-
-  <!-- ✅ 墨水 canvas -->
   <canvas id="ink-container"></canvas>
 
-  <!-- ✅ 顶部导航栏 -->
   <nav>
     <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具">AI Tools</button>
     <button class="nav-button" data-en="Classics" data-zh="古籍">Classics</button>
@@ -127,18 +122,15 @@
     <button class="nav-button" onclick="location.href='./profile.html'" data-en="Profile" data-zh="个人">Profile</button>
   </nav>
 
-  <!-- ✅ 欢迎语 -->
   <div class="main-content">
     <h1 data-en="Welcome to NeoShuyuan" data-zh="欢迎来到新书院">Welcome to NeoShuyuan</h1>
   </div>
 
-  <!-- ✅ 音乐和语言控制 -->
   <div class="footer-controls">
     <button class="music-control" id="music-toggle">Play Music</button>
     <button class="language-switch" id="language-switch">中文 / English</button>
   </div>
 
-  <!-- ✅ 背景音乐 -->
   <audio id="guqin-music" loop>
     <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg" />
   </audio>
@@ -148,7 +140,6 @@
     const musicBtn = document.getElementById('music-toggle');
     const langBtn = document.getElementById('language-switch');
 
-    // 默认暂停音乐
     music.pause();
     musicBtn.textContent = "Play Music";
 
@@ -162,7 +153,6 @@
       }
     };
 
-    // 默认语言英文
     let lang = 'en';
     function updateLanguage() {
       document.querySelectorAll('[data-en]').forEach(el => {
@@ -176,18 +166,23 @@
       updateLanguage();
     };
 
-    // ✅ 改进版墨水动画（避免闪烁）
+    // ✅ 墨水动画逻辑（定时出现 + 点击生成）
     const canvas = document.getElementById('ink-container');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     let drops = [];
 
-    function createDrop() {
+    function createDrop(x, y) {
       drops.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
+        x: x ?? Math.random() * canvas.width,
+        y: y ?? Math.random() * canvas.height,
         r: 0,
         alpha: 0.95,
         maxR: 180 + Math.random() * 80
@@ -221,19 +216,13 @@
       requestAnimationFrame(animate);
     }
 
-    setInterval(createDrop, 3000);
+    setInterval(() => createDrop(), 3000);
     animate();
+
+    // ✅ 点击出现墨水
+    document.addEventListener('click', function (e) {
+      createDrop(e.clientX, e.clientY);
+    });
   </script>
 </body>
 </html>
-
-// 点击屏幕时墨水生成
-window.addEventListener('click', function (e) {
-  drops.push({
-    x: e.clientX,
-    y: e.clientY,
-    r: 0,
-    alpha: 0.95,
-    maxR: 180 + Math.random() * 80
-  });
-});
