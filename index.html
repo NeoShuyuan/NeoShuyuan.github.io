@@ -6,10 +6,112 @@
   <title>NeoShuyuan - 新书院</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* ...（保留之前的样式）... */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scrollbar-width: none;
+       user-select: none;  
+    }
+    *::-webkit-scrollbar {
+      display: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Noto Serif SC', serif;
+    }
+
+    #bg-img {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: fill;
+      z-index: -2;
+    }
+
+    #ink-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 60px;
+      padding: 30px 0;
+      font-size: 1.3rem;
+      font-weight: 500;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 10;
+      background: transparent;
+    }
+
+    .nav-button {
+      background: none;
+      border: none;
+      font-size: inherit;
+      cursor: pointer;
+      color: #111;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-button:hover {
+      transform: scale(1.1);
+    }
+
+    .main-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      z-index: 5;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 3.2rem;
+      color: #111;
+      font-weight: bold;
+    }
+
+    .footer-controls {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      background: transparent;
+      padding: 10px;
+      z-index: 10;
+    }
+
+    .music-control, .language-switch {
+      background-color: #4b3621;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+
   <img id="bg-img" src="Image_20250710105042.jpg" alt="background" />
   <canvas id="ink-container"></canvas>
 
@@ -30,35 +132,15 @@
     <button class="language-switch" id="language-switch">中文 / English</button>
   </div>
 
-  <!-- 背景音乐 -->
   <audio id="guqin-music" loop>
     <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg" />
-  </audio>
-
-  <!-- 落子音效 -->
-  <audio id="click-sound">
-    <source src="click-stone.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
     const music = document.getElementById('guqin-music');
     const musicBtn = document.getElementById('music-toggle');
     const langBtn = document.getElementById('language-switch');
-    const navBtns = document.querySelectorAll('.nav-button');
-    const clickSound = document.getElementById('click-sound');
 
-    // 点击音效
-    function playClick() {
-      clickSound.currentTime = 0;
-      clickSound.play();
-    }
-
-    // 导航按钮点击播放音效
-    navBtns.forEach(btn => btn.addEventListener('click', playClick));
-
-    // 音乐控制按钮也播放音效
-    musicBtn.addEventListener('click', playClick);
-    
     music.pause();
     musicBtn.textContent = "Play Music";
     musicBtn.onclick = () => {
@@ -78,13 +160,12 @@
       });
     }
     updateLanguage();
+
     langBtn.onclick = () => {
-      playClick();
       lang = lang === 'en' ? 'zh' : 'en';
       updateLanguage();
     };
 
-    // 墨水动画（保持不变）
     const canvas = document.getElementById('ink-container');
     const ctx = canvas.getContext('2d');
     function resizeCanvas() {
@@ -93,33 +174,42 @@
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
+
     let drops = [];
-    function createDrop(x,y) {
-      drops.push({ x:x||Math.random()*canvas.width, y:y||Math.random()*canvas.height, r:0, alpha:0.95, maxR:180+Math.random()*80 });
+    function createDrop(x, y) {
+      drops.push({
+        x: x || Math.random() * canvas.width,
+        y: y || Math.random() * canvas.height,
+        r: 0,
+        alpha: 0.95,
+        maxR: 180 + Math.random() * 80
+      });
     }
+
     function animate() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       let newDrops = [];
       drops.forEach(drop => {
         drop.r += 0.8;
         drop.alpha *= 0.983;
         if (drop.r <= drop.maxR && drop.alpha >= 0.01) {
           newDrops.push(drop);
-          const g = ctx.createRadialGradient(drop.x, drop.y,0,drop.x,drop.y,drop.r);
-          g.addColorStop(0,`rgba(0,20,5,${drop.alpha})`);
-          g.addColorStop(1,'rgba(0,20,5,0)');
+          const g = ctx.createRadialGradient(drop.x, drop.y, 0, drop.x, drop.y, drop.r);
+          g.addColorStop(0, `rgba(0,20,5,${drop.alpha})`);
+          g.addColorStop(1, 'rgba(0,20,5,0)');
           ctx.beginPath();
           ctx.fillStyle = g;
-          ctx.arc(drop.x,drop.y,drop.r,0,2*Math.PI);
+          ctx.arc(drop.x, drop.y, drop.r, 0, 2 * Math.PI);
           ctx.fill();
         }
       });
       drops = newDrops;
       requestAnimationFrame(animate);
     }
+
     animate();
     setInterval(() => createDrop(), 3000);
-    // 点击生成墨水
+
     document.addEventListener('click', e => {
       createDrop(e.clientX, e.clientY);
     });
