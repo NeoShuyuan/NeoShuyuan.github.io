@@ -139,7 +139,14 @@
   <audio id="click-sound">
     <source src="5390.mp3" type="audio/mpeg" />
   </audio>
-
+document.addEventListener('click', function unlockAudioOnce() {
+  const clickSound = document.getElementById('click-sound');
+  clickSound.play().then(() => {
+    clickSound.pause();
+    clickSound.currentTime = 0;
+    document.removeEventListener('click', unlockAudioOnce);
+  }).catch(() => {});
+}, { once: true });
   <script>
     const music = document.getElementById('guqin-music');
     const clickSound = document.getElementById('click-sound');
