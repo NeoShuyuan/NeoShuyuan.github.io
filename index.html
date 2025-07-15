@@ -40,7 +40,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      pointer-events: none;
+      pointer-events: auto;
       z-index: -2;
     }
 
@@ -153,6 +153,8 @@
     const clickSound = document.getElementById('click-sound');
     const musicBtn = document.getElementById('music-toggle');
     const langBtn = document.getElementById('language-switch');
+    const canvas = document.getElementById('ink-container');
+    const ctx = canvas.getContext('2d');
 
     music.pause();
     musicBtn.textContent = "Play Music";
@@ -176,11 +178,10 @@
 
     langBtn.onclick = () => {
       lang = lang === 'en' ? 'zh' : 'en';
-      localStorage.setItem('lang', lang); // 保存语言偏好
+      localStorage.setItem('lang', lang);
       updateLanguage();
     };
 
-    // ✅ 所有按钮播放音效
     document.querySelectorAll('button').forEach(btn => {
       btn.addEventListener('click', () => {
         clickSound.currentTime = 0;
@@ -188,18 +189,15 @@
       });
     });
 
-    // ✅ 所有带 data-href 的按钮延迟跳转
     document.querySelectorAll('.nav-button[data-href]').forEach(btn => {
       btn.addEventListener('click', () => {
         const target = btn.getAttribute('data-href');
         setTimeout(() => {
           location.href = target;
-        }, 200); // 延迟 200ms 跳转
+        }, 200);
       });
     });
 
-    const canvas = document.getElementById('ink-container');
-    const ctx = canvas.getContext('2d');
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -240,11 +238,14 @@
     }
 
     animate();
-    setInterval(() => createDrop(), 3000);
 
-    // 第一次点击解锁音频并创建墨滴，之后只创建墨滴
-    document.addEventListener('click', function unlockAudioOnce(e) {
-      const clickSound = document.getElementById('click-sound');
+    // ✅ 放到 resize 完成之后执行自动滴墨
+    setTimeout(() => {
+      setInterval(() => createDrop(), 3000);
+    }, 500);
+
+    // ✅ 点击 canvas 出现墨滴（第一次点击也解锁音频）
+    canvas.addEventListener('click', function unlockAudioOnce(e) {
       clickSound.play().then(() => {
         clickSound.pause();
         clickSound.currentTime = 0;
@@ -252,8 +253,7 @@
       createDrop(e.clientX, e.clientY);
     }, { once: true });
 
-    // 第二次及以后点击只负责创建墨滴
-    document.addEventListener('click', e => {
+    canvas.addEventListener('click', e => {
       createDrop(e.clientX, e.clientY);
     });
   </script>
