@@ -31,7 +31,7 @@
       width: 100vw;
       height: 100vh;
       object-fit: fill;
-      z-index: -2;
+      z-index: -1;
     }
 
     #ink-container {
@@ -41,7 +41,7 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: -1;
+      z-index: -2;
     }
 
     nav {
@@ -108,19 +108,27 @@
       border-radius: 20px;
       cursor: pointer;
     }
+
+    @media (max-width: 768px) {
+      nav {
+        gap: 20px;
+        font-size: 1rem;
+        flex-wrap: wrap;
+        padding: 20px 10px;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <img id="bg-img" src="Image_20250710105042.jpg" alt="background" />
+  <img id="bg-img" src="Image_20250710105042.jpg?v=1" alt="background" />
   <canvas id="ink-container"></canvas>
 
   <nav>
-    <button class="nav-button" data-en="AI Tools" data-zh="AI解题工具" data-href="./tools.html">AI Tools</button>
-    <button class="nav-button" data-en="Classics" data-zh="古籍" data-href="./classics.html">Classics</button>
-    <button class="nav-button" data-en="Learning" data-zh="学习" data-href="./learning.html">Learning</button>
-    <button class="nav-button" data-en="Culture" data-zh="文化" data-href="./culture.html">Culture</button>
-    <button class="nav-button" data-en="Profile" data-zh="个人" data-href="./profile.html">Profile</button>
+    <button class="nav-button" data-en="MathScroll" data-zh="算卷" data-href="./tools.html">MathScroll</button>
+    <button class="nav-button" data-en="Classics Studio" data-zh="经典坊" data-href="./classics.html">Classics Studio</button>
+    <button class="nav-button" data-en="Scholar's Cache" data-zh="学藏" data-href="./learning.html">Scholar's Cache</button>
+    <button class="nav-button" data-en="About the Weaver" data-zh="织者志" data-href="./culture.html">About the Weaver</button>
   </nav>
 
   <div class="main-content">
@@ -136,17 +144,10 @@
     <source src="chinese-ancient-style-music-love-etlx-247345.mp3" type="audio/mpeg" />
   </audio>
 
-  <audio id="click-sound"preload="auto">
+  <audio id="click-sound" preload="auto">
     <source src="5390.mp3" type="audio/mpeg" />
   </audio>
-document.addEventListener('click', function unlockAudioOnce() {
-  const clickSound = document.getElementById('click-sound');
-  clickSound.play().then(() => {
-    clickSound.pause();
-    clickSound.currentTime = 0;
-    document.removeEventListener('click', unlockAudioOnce);
-  }).catch(() => {});
-}, { once: true });
+
   <script>
     const music = document.getElementById('guqin-music');
     const clickSound = document.getElementById('click-sound');
@@ -165,7 +166,7 @@ document.addEventListener('click', function unlockAudioOnce() {
       }
     };
 
-    let lang = 'en';
+    let lang = localStorage.getItem('lang') || 'en';
     function updateLanguage() {
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${lang}`);
@@ -175,6 +176,7 @@ document.addEventListener('click', function unlockAudioOnce() {
 
     langBtn.onclick = () => {
       lang = lang === 'en' ? 'zh' : 'en';
+      localStorage.setItem('lang', lang); // 保存语言偏好
       updateLanguage();
     };
 
@@ -240,6 +242,17 @@ document.addEventListener('click', function unlockAudioOnce() {
     animate();
     setInterval(() => createDrop(), 3000);
 
+    // 第一次点击解锁音频并创建墨滴，之后只创建墨滴
+    document.addEventListener('click', function unlockAudioOnce(e) {
+      const clickSound = document.getElementById('click-sound');
+      clickSound.play().then(() => {
+        clickSound.pause();
+        clickSound.currentTime = 0;
+      }).catch(() => {});
+      createDrop(e.clientX, e.clientY);
+    }, { once: true });
+
+    // 第二次及以后点击只负责创建墨滴
     document.addEventListener('click', e => {
       createDrop(e.clientX, e.clientY);
     });
