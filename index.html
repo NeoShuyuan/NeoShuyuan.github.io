@@ -11,7 +11,7 @@
       padding: 0;
       box-sizing: border-box;
       scrollbar-width: none;
-      user-select: none;  
+      user-select: none;
     }
     *::-webkit-scrollbar {
       display: none;
@@ -31,7 +31,7 @@
       width: 100vw;
       height: 100vh;
       object-fit: fill;
-      z-index: -1;
+      z-index: -2; /* 背景图放在 canvas 下面 */
     }
 
     #ink-container {
@@ -40,8 +40,8 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      pointer-events: auto;
-      z-index: -2;
+      pointer-events: auto; /* 允许点击 */
+      z-index: -1; /* canvas 高于背景图 */
     }
 
     nav {
@@ -239,13 +239,13 @@
 
     animate();
 
-    // ✅ 放到 resize 完成之后执行自动滴墨
+    // 自动滴墨（每 3 秒）
     setTimeout(() => {
       setInterval(() => createDrop(), 3000);
     }, 500);
 
-    // ✅ 点击 canvas 出现墨滴（第一次点击也解锁音频）
-    canvas.addEventListener('click', function unlockAudioOnce(e) {
+    // 点击页面任何位置都生成墨滴（首次点击解锁音频）
+    document.body.addEventListener('click', function unlockOnce(e) {
       clickSound.play().then(() => {
         clickSound.pause();
         clickSound.currentTime = 0;
@@ -253,7 +253,7 @@
       createDrop(e.clientX, e.clientY);
     }, { once: true });
 
-    canvas.addEventListener('click', e => {
+    document.body.addEventListener('click', e => {
       createDrop(e.clientX, e.clientY);
     });
   </script>
