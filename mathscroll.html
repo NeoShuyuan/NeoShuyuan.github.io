@@ -7,14 +7,13 @@
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Three.js -->
-  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-  <script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
   <!-- MathJax -->
   <script>
     window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
@@ -26,309 +25,91 @@
       --nav-h: 60px;
       --c-bg: #F9FAFB;
       --c-border: #D1D5DB;
-      --c-gray: #6B7280;
-      --c-gray-light: #F3F4F6;
-      --c-deepgray: #1F2937;
       --c-blue: #3B82F6;
       --c-blue-dark: #2563EB;
       --c-green: #10B981;
       --c-red: #EF4444;
-      --c-gold: #D4A017;
       --radius: 8px;
       --shadow: 0 8px 24px rgba(15,23,42,.08);
     }
-    *{ box-sizing: border-box; }
-    html,body{ height:100%; margin:0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Arial, 'Noto Serif SC', serif; color:#111; background:#fff; }
+    body{ margin:0; font-family: Inter, sans-serif; background: var(--c-bg); }
+    .topnav{ position:fixed; top:0; left:0; right:0; height:var(--nav-h); background:#111827; color:#fff; display:flex; align-items:center; z-index:20; }
+    .nav-inner{ width:100%; max-width:1200px; margin:auto; display:flex; justify-content:space-between; padding:0 16px; }
+    .nav-links a{ color:#fff; text-decoration:none; margin:0 10px; font-weight:600; }
 
-    /* === global language toggle === */
-    body.lang-en .zh{ display:none!important; }
-    body.lang-zh .en{ display:none!important; }
-    .lang-switch{
-      position:fixed; right:16px; top:12px; z-index:60;
-      background:#111827; color:#fff; border:none; border-radius:8px; height:36px; padding:0 12px; cursor:pointer;
-    }
-    .lang-switch:hover{ background:#3B82F6; }
+    .page{ padding-top: var(--nav-h); }
+    .main{ display:flex; justify-content:center; align-items:flex-start; min-height:calc(100vh - var(--nav-h)); }
 
-    /* 顶部导航 */
-    .topnav{
-      position:fixed; top:0; left:0; right:0; height:var(--nav-h);
-      background:#111827; color:#fff; display:flex; align-items:center; justify-content:center;
-      z-index:20;
-    }
-    .nav-inner{ width:100%; max-width:1200px; display:flex; align-items:center; justify-content:space-between; padding:0 16px; }
-    .nav-links{ display:flex; gap:20px; }
-    .nav-links a{
-      color:#fff; text-decoration:none; padding:10px 14px; border-radius:6px; transition:.2s ease;
-      font-weight:600;
-    }
-    .nav-links a:hover{ background: var(--c-blue); }
-    .brand{ font-weight:700; letter-spacing:.3px; }
+    .hero-gap{ height:20vh; pointer-events:none; }
+    .mode-buttons{ display:flex; gap:40px; justify-content:center; margin:20px 0; position:relative; z-index:5; }
+    .mode-btn{ width:200px; height:80px; border:none; border-radius: var(--radius); font-size:20px; font-weight:700; color:#fff; cursor:pointer; }
+    .mode-btn.neo{ background: var(--c-blue); }
+    .mode-btn.classic{ background: #6B7280; }
 
-    /* 主体容器 */
-    .page{ padding-top: var(--nav-h); min-height:100vh; background:var(--c-bg); }
-    .main{ min-height: calc(100vh - var(--nav-h)); display:flex; align-items:center; justify-content:center; position:relative; }
-    .center-wrap{ width:100%; max-width:1100px; margin:auto; padding:24px; display:flex; flex-direction:column; align-items:center; gap:24px; }
+    /* Neo Wrap */
+    #neoWrap{ display:none; width:100%; text-align:center; }
+    .text-input{ width:60%; height:50px; padding:0 10px; border:1px solid var(--c-border); border-radius:6px; font-size:16px; }
+    .btn{ border:none; border-radius:6px; height:40px; padding:0 14px; color:#fff; cursor:pointer; font-weight:600; }
+    .btn.blue{ background: var(--c-blue); }
+    .btn.green{ background: var(--c-green); }
+    .result-card{ width:80%; max-width:800px; margin:20px auto; background:#fff; border-radius: var(--radius); box-shadow: var(--shadow); padding:20px; display:none; }
 
-    /* 模式入口按钮区（页面顶部 20% 位置） */
-    .hero-gap{ height:20vh; }
-    .mode-buttons{ display:flex; gap:40px; justify-content:center; align-items:center; flex-wrap:wrap; }
-    .mode-btn{ width:200px; height:80px; border:none; border-radius:var(--radius); font-size:20px; font-weight:700; color:#fff; cursor:pointer; transition:.2s ease; box-shadow:var(--shadow); }
-    .mode-btn.neo{ background:var(--c-blue); }
-    .mode-btn.neo:hover{ transform:translateY(-2px); box-shadow:0 12px 28px rgba(59,130,246,.35); }
-    .mode-btn.classic{ background:#6B7280; }
-    .mode-btn.classic:hover{ background:var(--c-blue); transform:translateY(-2px); }
-
-    /* 输入区 */
-    .input-row{ width:100%; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
-    .text-input{ width:60%; max-width:600px; min-width:300px; height:50px; padding:0 16px; border:1px solid var(--c-border); border-radius:6px; font-size:16px; outline:none; background:#fff; }
-    .btn{ border:none; border-radius:6px; height:40px; padding:0 14px; color:#fff; cursor:pointer; transition:.2s ease; font-weight:600; }
-    .btn.blue{ background:var(--c-blue); }
-    .btn.blue:hover{ background:var(--c-blue-dark); transform:translateY(-1px); }
-    .btn.green{ background:var(--c-green); }
-    .btn.red{ background:var(--c-red); }
-    .hint{ color:var(--c-gray); font-size:16px; text-align:center; }
-
-    /* 手写弹窗 */
-    .modal{ position:fixed; inset:0; background:rgba(17,24,39,.5); display:none; align-items:center; justify-content:center; z-index:50; }
-    .modal .panel{ width:400px; max-width:92vw; background:#fff; border:2px solid var(--c-border); border-radius:10px; box-shadow:var(--shadow); padding:12px; display:flex; flex-direction:column; gap:10px; }
-    .canvas-wrap{ border:1px solid var(--c-border); border-radius:8px; overflow:hidden; background:#fff; width:100%; height:300px; }
-    .canvas-wrap canvas{ width:100%; height:100%; display:block; }
-    .row-right{ display:flex; justify-content:flex-end; gap:10px; }
-
-    /* 解题结果卡片 */
-    .result-card{ width:80%; max-width:800px; background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); padding:20px; display:none; flex-direction:column; gap:16px; margin:8px auto; }
-    .answer{ font-size:24px; font-weight:700; color:var(--c-blue); text-align:center; }
-    .tabs{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
-    .tab-btn{ width:100px; height:40px; border-radius:6px; border:1px solid var(--c-border); background:#E5E7EB; cursor:pointer; font-weight:600; }
-    .tab-btn.active{ background:var(--c-blue); color:#fff; border-color:transparent; }
-    .tab-panels{ border:1px solid var(--c-border); border-radius:8px; padding:16px; min-height:320px; background:#fff; }
-    .panel{ display:none; }
-    .panel.active{ display:block; }
-    .canvas-2d,.canvas-3d{ width:400px; height:300px; max-width:100%; margin:0 auto; }
-    .suggest{ max-height:200px; overflow:auto; color:#374151; line-height:1.7; }
-    .wrongbook{ width:150px; height:40px; background:var(--c-red); color:#fff; border:none; border-radius:6px; font-weight:700; margin:0 auto; display:block; }
-
-    /* Classic Mode 布局 */
-    .classic-wrap{ display:none; width:100%; gap:0; }
-    .classic-container{ display:flex; width:100%; min-height:calc(100vh - var(--nav-h)); }
-    .classic-sidebar{ position:sticky; top:var(--nav-h); width:25%; min-width:260px; background:var(--c-gray-light); border-right:1px solid var(--c-border); height:calc(100vh - var(--nav-h)); padding:16px; overflow:auto; }
-    .classic-main{ width:75%; padding:24px; background:var(--c-bg); min-height:calc(100vh - var(--nav-h)); }
-    .sec-title{ font-size:18px; font-weight:700; margin:12px 0; }
-    details{ background:#fff; border:1px solid var(--c-border); border-radius:8px; padding:8px 12px; margin-bottom:10px; }
-    summary{ cursor:pointer; font-weight:700; }
-    .alg-list a{ display:block; padding:8px 10px; border-radius:6px; color:#374151; text-decoration:none; margin:6px 0; }
-    .alg-list a:hover{ background:#E5E7EB; }
-    .alg-list a.active{ background:var(--c-blue); color:#fff; }
-    .diff-col{ margin-top:16px; display:flex; flex-direction:column; gap:10px; }
-    .diff-btn{ height:50px; width:100%; border:none; border-radius:6px; background:#9CA3AF; color:#fff; font-weight:700; cursor:pointer; transition:.2s; }
-    .diff-btn:hover{ box-shadow:var(--shadow); }
-    .diff-btn.active{ background:var(--c-blue); }
-
-    /* 右侧内容区 */
-    .alg-header{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-    .alg-title{ font-size:24px; font-weight:700; }
-    .alg-intro{ color:var(--c-gray); font-size:16px; }
-    .block{ background:#fff; border:1px solid var(--c-border); border-radius:8px; padding:16px; margin:14px 0; }
-    .zh-btn{ background:var(--c-blue); color:#fff; border:none; border-radius:6px; height:36px; padding:0 12px; }
-    .zh-text{ font-family:'Noto Serif SC', serif; font-size:18px; display:none; margin-top:8px; }
-    .en-text{ font-size:16px; }
-    .easy-text{ color:var(--c-gray); font-size:14px; line-height:1.5; }
-    .collect-btn{ width:120px; height:40px; background:var(--c-gold); border:none; border-radius:6px; color:#111; font-weight:700; }
-    .challenge-title{ font-size:20px; font-weight:700; }
-    .answer-row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .ans-input{ width:60%; max-width:600px; min-width:260px; height:50px; border:1px solid var(--c-border); border-radius:6px; padding:0 12px; }
-    .next-btn{ width:120px; height:40px; background:var(--c-blue); color:#fff; border:none; border-radius:6px; }
-    .analysis{ margin-top:10px; line-height:1.7; }
-
-    /* 移动端适配 */
-    @media (max-width:768px){
-      .text-input{ width:90%; }
-      .classic-sidebar{ position:fixed; left:0; top:var(--nav-h); transform:translateX(-100%); transition:.25s ease; z-index:30; }
-      .classic-sidebar.open{ transform:translateX(0); }
-      .burger{ display:inline-flex!important; }
-      .classic-main{ width:100%; padding-top:8px; }
-      .mode-btn{ width:min(200px,45vw); height:72px; }
-    }
-    .burger{ display:none; background:var(--c-blue); color:#fff; border:none; border-radius:6px; height:36px; padding:0 12px; }
+    /* Classic Wrap */
+    #classicWrap{ display:none; width:100%; padding:20px; }
+    .classic-sidebar{ width:25%; float:left; }
+    .classic-main{ width:70%; float:right; background:#fff; padding:20px; border-radius: var(--radius); box-shadow: var(--shadow); }
   </style>
 </head>
-<body class="lang-en">
+<body>
   <!-- 顶部导航 -->
   <nav class="topnav">
     <div class="nav-inner">
-      <div class="brand"><span class="en">NeoShuyuan</span><span class="zh">新书院</span></div>
+      <div class="brand">NeoShuyuan</div>
       <div class="nav-links">
-        <a href="#"><span class="en">MathScroll</span><span class="zh">算卷</span></a>
-        <a href="#"><span class="en">Classics Studio</span><span class="zh">经典坊</span></a>
-        <a href="#"><span class="en">Scholar’s Cache</span><span class="zh">学藏</span></a>
-        <a href="#"><span class="en">About the Weaver</span><span class="zh">织者志</span></a>
+        <a href="#">MathScroll</a>
+        <a href="#">Classics Studio</a>
+        <a href="#">Scholar’s Cache</a>
+        <a href="#">About the Weaver</a>
       </div>
     </div>
   </nav>
-  <!-- 语言开关 -->
-  <button id="btnLang" class="lang-switch"><span class="en">中文</span><span class="zh">English</span></button>
 
   <main class="page">
     <section class="main">
-      <div class="center-wrap">
+      <div style="width:100%;">
+
         <div class="hero-gap"></div>
 
-        <!-- 模式入口按钮 -->
+        <!-- 模式选择按钮 -->
         <div class="mode-buttons" id="modeButtons">
-          <button class="mode-btn neo" id="btnNeo"><span class="en">Neo Mode</span><span class="zh">Neo 模式</span></button>
-          <button class="mode-btn classic" id="btnClassic"><span class="en">Classic Mode</span><span class="zh">Classic 模式</span></button>
+          <button class="mode-btn neo" id="btnNeo" type="button" onclick="showNeo()">Neo Mode</button>
+          <button class="mode-btn classic" id="btnClassic" type="button" onclick="showClassic()">Classic Mode</button>
         </div>
 
         <!-- Neo Mode -->
-        <div id="neoWrap" style="display:none; width:100%;">
-          <div class="input-row">
+        <div id="neoWrap">
+          <div>
             <input id="questionInput" class="text-input" placeholder="Try: Solve 2x²+3x+1=0" />
-            <button class="btn blue" id="btnHand"><span class="en">Handwriting</span><span class="zh">手写输入</span></button>
-            <button class="btn green" id="btnSubmit"><span class="en">Submit</span><span class="zh">提交</span></button>
+            <button class="btn blue" id="btnHand">Handwrite</button>
+            <button class="btn green" id="btnSubmit">Submit</button>
           </div>
-          <div class="hint">
-            <span class="en">Supports English / Chinese / LaTeX. e.g., integrate x^2 dx; solve x^2+3x+2=0; \(\int_0^1 x^2\,dx\)</span>
-            <span class="zh">支持英文 / 中文 / LaTeX。示例：积分 integrate x^2；求解 x^2+3x+2=0；\(\int_0^1 x^2\,dx\)</span>
-          </div>
-
           <div class="result-card" id="resultCard">
             <div class="answer" id="mainAnswer">—</div>
-            <div class="tabs">
-              <button class="tab-btn active" data-tab="tab2d">2D</button>
-              <button class="tab-btn" data-tab="tab3d">3D</button>
-              <button class="tab-btn" data-tab="tabFormula">Formula</button>
-              <button class="tab-btn" data-tab="tabSuggest">Suggestion</button>
-            </div>
-            <div class="tab-panels">
-              <div class="panel active" id="tab2d">
-                <canvas id="chart2d" class="canvas-2d"></canvas>
-              </div>
-              <div class="panel" id="tab3d">
-                <div id="threeContainer" class="canvas-3d"></div>
-              </div>
-              <div class="panel" id="tabFormula">
-                <details open>
-                  <summary>Step 1</summary>
-                  <div class="en">Recognize the problem and write it in standard form, e.g. $x^2+3x+2=0$.</div>
-                  <div class="zh">识别题型并写成标准式，如 $x^2+3x+2=0$。</div>
-                </details>
-                <details>
-                  <summary>Step 2</summary>
-                  <div class="en">Apply rules (factorization / substitution / derivative / integral) to simplify.</div>
-                  <div class="zh">应用规则（因式分解/代换/求导/积分）进行化简。</div>
-                </details>
-                <details>
-                  <summary>Step 3</summary>
-                  <div class="en">Get result and verify. Example: $(x+1)(x+2)=0 \Rightarrow x=-1,-2$.</div>
-                  <div class="zh">得到结论并校验。如 $(x+1)(x+2)=0 \Rightarrow x=-1,-2$。</div>
-                </details>
-              </div>
-              <div class="panel" id="tabSuggest">
-                <div class="suggest" id="suggestBox"></div>
-              </div>
-            </div>
-            <button class="wrongbook" id="btnWrongbook">Add to Wrongbook</button>
           </div>
         </div>
 
         <!-- Classic Mode -->
-        <div id="classicWrap" class="classic-wrap">
-          <div class="classic-container">
-            <aside class="classic-sidebar" id="classicSidebar">
-              <div class="sec-title"><span class="en">Learn Algorithms</span><span class="zh">学习目录</span></div>
-              <details open>
-                <summary><span class="en">Scroll I · Areas</span><span class="zh">卷一 · 方田</span></summary>
-                <div class="alg-list">
-                  <a href="#" data-alg="square-field" class="active"><span class="en">Field area conversion</span><span class="zh">田亩面积折算</span></a>
-                  <a href="#" data-alg="rect-split"><span class="en">Rectangle split</span><span class="zh">矩形分割</span></a>
-                </div>
-              </details>
-              <details>
-                <summary><span class="en">Scroll VII · Excess & Deficiency</span><span class="zh">卷七 · 盈不足</span></summary>
-                <div class="alg-list">
-                  <a href="#" data-alg="excess-deficiency"><span class="en">Excess-Deficiency</span><span class="zh">盈不足法</span></a>
-                </div>
-              </details>
-
-              <div class="sec-title" style="margin-top:18px;"><span class="en">Challenge Mode</span><span class="zh">挑战模式</span></div>
-              <div class="diff-col">
-                <button class="diff-btn active" data-diff="easy"><span class="en">Easy</span><span class="zh">基础</span></button>
-                <button class="diff-btn" data-diff="mid"><span class="en">Medium</span><span class="zh">中等</span></button>
-                <button class="diff-btn" data-diff="hard"><span class="en">Hard</span><span class="zh">困难</span></button>
-              </div>
-            </aside>
-
-            <section class="classic-main">
-              <button class="burger" id="btnBurger"><span class="en">Catalog</span><span class="zh">目录</span></button>
-
-              <!-- 学习区 -->
-              <div class="block">
-                <div class="alg-header">
-                  <div>
-                    <div class="alg-title" id="algTitle"><span class="en">Field area conversion</span><span class="zh">田亩面积折算</span></div>
-                    <div class="alg-intro" id="algIntro">
-                      <span class="en">Convert and compute farmland area using ancient rules and modern algebra.</span>
-                      <span class="zh">结合古制与现代代数计算田地面积。</span>
-                    </div>
-                  </div>
-                  <button class="collect-btn" id="btnCollect"><span class="en">Collect</span><span class="zh">收藏</span></button>
-                </div>
-                <div class="block">
-                  <button class="zh-btn" id="btnZh"><span class="en">Show Original</span><span class="zh">展开原文</span></button>
-                  <div class="zh-text" id="zhText">原文：今有田亩……（示例原文占位）</div>
-                  <div class="en-text" style="margin-top:10px;">
-                    English: Given a field with dimensions..., compute its area and convert among units.
-                  </div>
-                  <div class="easy-text" style="margin-top:10px;">
-                    <span class="en">Plain English: translate old units into modern metric and compute areas with examples.</span>
-                    <span class="zh">通俗解释：把古制单位转成米制，用示例讲解面积计算。</span>
-                  </div>
-                </div>
-
-                <!-- 示例题 Tabs -->
-                <div class="block">
-                  <div class="tabs">
-                    <button class="tab-btn active" data-tab="c2d">2D</button>
-                    <button class="tab-btn" data-tab="c3d">3D</button>
-                    <button class="tab-btn" data-tab="cFormula">Formula</button>
-                    <button class="tab-btn" data-tab="cSuggest">Suggestion</button>
-                  </div>
-                  <div class="tab-panels">
-                    <div class="panel active" id="c2d">
-                      <canvas id="chart2dClassic" class="canvas-2d"></canvas>
-                    </div>
-                    <div class="panel" id="c3d"><div id="threeClassic" class="canvas-3d"></div></div>
-                    <div class="panel" id="cFormula">
-                      <details open><summary>Step 1</summary><div class="en">Convert units to metric.</div><div class="zh">转为米制。</div></details>
-                      <details><summary>Step 2</summary><div class="en">Compute rectangle/combined shapes.</div><div class="zh">求矩形/组合图形面积。</div></details>
-                      <details><summary>Step 3</summary><div class="en">Check values and error.</div><div class="zh">校验与误差。</div></details>
-                    </div>
-                    <div class="panel" id="cSuggest">
-                      <div class="suggest"><span class="en">Split irregular fields into rectangles/triangles and sum.</span><span class="zh">将不规则田块拆分成矩形或三角形再求和。</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 挑战区 -->
-              <div class="block">
-                <div class="challenge-title">
-                  <span class="en">Challenge (difficulty:</span><span class="zh">挑战题（当前难度：</span>
-                  <span id="diffLabel">Easy</span><span class="zh">）</span>
-                </div>
-                <div id="challengeQuestion" style="margin-top:8px;"></div>
-                <div class="answer-row" style="margin-top:10px;">
-                  <input class="ans-input" id="ansInput" placeholder="Your answer / 你的答案" />
-                  <button class="btn green" id="btnAns"><span class="en">Submit</span><span class="zh">提交</span></button>
-                </div>
-                <div id="judge" style="margin-top:10px; font-weight:700;"></div>
-                <div class="analysis" id="analysis"></div>
-                <div style="margin-top:10px; display:flex; gap:10px;">
-                  <button class="next-btn" id="btnNext"><span class="en">Next</span><span class="zh">下一题</span></button>
-                  <button class="btn red" id="btnWB2">Add to Wrongbook</button>
-                </div>
-              </div>
-            </section>
+        <div id="classicWrap">
+          <div class="classic-sidebar">
+            <h3>Learn Algorithms</h3>
+            <ul>
+              <li>Square Field</li>
+              <li>Excess & Deficiency</li>
+            </ul>
+          </div>
+          <div class="classic-main">
+            <h3>Classic Content</h3>
+            <p>This is the Classic Mode area.</p>
           </div>
         </div>
 
@@ -336,381 +117,30 @@
     </section>
   </main>
 
-  <!-- 手写输入弹窗 -->
-  <div class="modal" id="handModal">
-    <div class="panel">
-      <div style="font-weight:700;"><span class="en">Handwriting</span><span class="zh">手写输入</span></div>
-      <div class="canvas-wrap"><canvas id="handCanvas"></canvas></div>
-      <div class="row-right">
-        <button class="btn red" id="btnClear"><span class="en">Clear</span><span class="zh">清除</span></button>
-        <button class="btn green" id="btnConfirm"><span class="en">Use</span><span class="zh">确认</span></button>
-        <button class="btn" style="background:#9CA3AF;color:#fff;" id="btnClose"><span class="en">Close</span><span class="zh">关闭</span></button>
-      </div>
-    </div>
-  </div>
-
   <script>
-    /************** Global: language toggle **************/
-    const btnLang = document.getElementById('btnLang');
-    function setLang(lang){
-      document.body.classList.toggle('lang-zh', lang === 'zh');
-      document.body.classList.toggle('lang-en', lang !== 'zh');
-      localStorage.setItem('site-lang', lang);
-      // placeholder
-      const input = document.getElementById('questionInput');
-      if(input){
-        input.placeholder = (lang==='zh') ? '试试：求解 2x²+3x+1=0' : 'Try: Solve 2x²+3x+1=0';
-      }
-      // 更新难度显示
-      const lbl = document.getElementById('diffLabel');
-      const map = { easy:{en:'Easy',zh:'基础'}, mid:{en:'Medium',zh:'中等'}, hard:{en:'Hard',zh:'困难'} };
-      lbl.textContent = map[currentDiff][lang==='zh'?'zh':'en'];
-      // 刷新 MathJax
-      if(window.MathJax && MathJax.typeset){ MathJax.typeset(); }
-    }
-    const savedLang = localStorage.getItem('site-lang') || 'en';
-    setLang(savedLang);
-    btnLang.addEventListener('click', ()=>{
-      setLang( (localStorage.getItem('site-lang')||'en') === 'en' ? 'zh' : 'en' );
-    });
-
-    /************** Top: mode buttons **************/
-    const btnNeo = document.getElementById('btnNeo');
-    const btnClassic = document.getElementById('btnClassic');
     const neoWrap = document.getElementById('neoWrap');
     const classicWrap = document.getElementById('classicWrap');
     const modeButtons = document.getElementById('modeButtons');
 
-    function showNeo(){
+    window.showNeo = function(){
       neoWrap.style.display = 'block';
       classicWrap.style.display = 'none';
-      document.querySelector('.hero-gap').style.display = 'block';
-      modeButtons.style.display = 'flex';
       window.scrollTo({top:0, behavior:'smooth'});
     }
-    function showClassic(){
+
+    window.showClassic = function(){
       neoWrap.style.display = 'none';
       classicWrap.style.display = 'block';
-      document.querySelector('.hero-gap').style.display = 'block';
-      modeButtons.style.display = 'flex';
       window.scrollTo({top:0, behavior:'smooth'});
-      setTimeout(() => { drawClassic2D(); mountClassic3D(); classic3DMounted = true; }, 50);
     }
-    btnNeo.addEventListener('click', showNeo);
-    btnClassic.addEventListener('click', showClassic);
 
-    /************** Handwriting modal **************/
-    const handModal = document.getElementById('handModal');
-    const btnHand = document.getElementById('btnHand');
-    const btnClear = document.getElementById('btnClear');
-    const btnConfirm = document.getElementById('btnConfirm');
-    const btnClose = document.getElementById('btnClose');
-    const handCanvas = document.getElementById('handCanvas');
-    const hc = handCanvas.getContext('2d');
-    let drawing = false;
-    function resizeHand(){
-      const wrap = document.querySelector('.canvas-wrap');
-      handCanvas.width = wrap.clientWidth;
-      handCanvas.height = wrap.clientHeight;
-      hc.fillStyle = '#fff'; hc.fillRect(0,0,handCanvas.width, handCanvas.height);
-    }
-    btnHand.addEventListener('click', () => { handModal.style.display = 'flex'; resizeHand(); });
-    btnClose.addEventListener('click', () => handModal.style.display = 'none');
-    btnClear.addEventListener('click', () => { hc.clearRect(0,0,handCanvas.width, handCanvas.height); hc.fillStyle='#fff'; hc.fillRect(0,0,handCanvas.width, handCanvas.height); });
-    handCanvas.addEventListener('mousedown', e => { drawing=true; hc.strokeStyle='#111'; hc.lineWidth=3; hc.lineCap='round'; hc.beginPath(); hc.moveTo(e.offsetX, e.offsetY); });
-    handCanvas.addEventListener('mousemove', e => { if(!drawing) return; hc.lineTo(e.offsetX, e.offsetY); hc.stroke(); });
-    ['mouseup','mouseleave'].forEach(ev => handCanvas.addEventListener(ev, () => drawing=false));
-    // 使用：把当前画布“临时等同为输入文本”（占位）；将来接 Mathpix 时替换此处
-    btnConfirm.addEventListener('click', () => {
-      handModal.style.display='none';
-      document.getElementById('questionInput').value = (localStorage.getItem('site-lang')==='zh' ? '（手写占位）' : '(handwriting placeholder)');
-      // TODO: 接 Mathpix 时：把 canvas.toDataURL() 发给 /api/handwrite，返回 LaTeX/文本再写回输入框
-      // const dataURL = handCanvas.toDataURL('image/png'); fetch('/api/handwrite', { ... })
-      alert(localStorage.getItem('site-lang')==='zh' ? '手写已填入输入框（示例，不含识别）' : 'Handwriting inserted (demo, no OCR).');
+    // 提交按钮示例
+    document.getElementById('btnSubmit').addEventListener('click', ()=>{
+      const q = document.getElementById('questionInput').value.trim();
+      if(!q){ alert("Please enter a question."); return; }
+      document.getElementById('mainAnswer').textContent = "Answer (demo): if q = x²+3x+2=0 then x=-1, -2";
+      document.getElementById('resultCard').style.display = 'block';
     });
-
-    /************** Neo Mode: submit **************/
-    const btnSubmit = document.getElementById('btnSubmit');
-    const resultCard = document.getElementById('resultCard');
-    const mainAnswer = document.getElementById('mainAnswer');
-    const questionInput = document.getElementById('questionInput');
-
-    let neo3DMounted = false;
-    btnSubmit.addEventListener('click', () => {
-      const q = questionInput.value.trim();
-      const lang = localStorage.getItem('site-lang') || 'en';
-      if(!q){ alert(lang==='zh' ? '请输入题目' : 'Please enter a problem'); return; }
-
-      // 小型演示：识别“x^2+3x+2=0”
-      let ansText = (lang==='zh') ? '答案（演示）：暂无法计算' : 'Answer (demo): not computed';
-      if (/x\^?2\+3x\+2=0/.test(q.replace(/\s/g,''))) {
-        ansText = (lang==='zh') ? '答案：x = -1, -2' : 'Answer: x = -1, -2';
-        // Formula 面板写入示例步骤
-        document.querySelector('#tabFormula').innerHTML = `
-          <details open><summary>Step 1</summary><div class="en">Write in standard form: $x^2+3x+2=0$.</div><div class="zh">写成标准式：$x^2+3x+2=0$。</div></details>
-          <details><summary>Step 2</summary><div class="en">Factorization: $(x+1)(x+2)=0$.</div><div class="zh">因式分解：$(x+1)(x+2)=0$。</div></details>
-          <details><summary>Step 3</summary><div class="en">Solutions: $x=-1,-2$.</div><div class="zh">解：$x=-1,-2$。</div></details>`;
-      }
-      mainAnswer.textContent = ansText;
-      resultCard.style.display = 'flex';
-
-      // 2D/3D
-      draw2DChart(q);
-      mount3D(); neo3DMounted = true;
-
-      // 建议
-      document.getElementById('suggestBox').innerHTML = buildSuggestions(q, lang).map(t=>`• ${t}`).join('<br/>');
-
-      if(window.MathJax && MathJax.typeset){ MathJax.typeset(); }
-      window.scrollTo({ top: resultCard.offsetTop - 80, behavior: 'smooth' });
-    });
-
-    // 建议文案（通用技巧，不绑定九章）
-    function buildSuggestions(q, lang){
-      q = q.toLowerCase();
-      const en = {
-        general:[
-          "Check units and domains.",
-          "Try a simpler special case first.",
-          "Sketch the function or number line.",
-          "Verify the result by substitution."
-        ],
-        quadratic:[
-          "Move all terms to one side → standard form.",
-          "Try factorization; if not, use quadratic formula.",
-          "Complete the square to get vertex form.",
-          "Check discriminant to know roots type."
-        ],
-        linear:[
-          "Isolate the variable step-by-step.",
-          "Balance both sides when adding/subtracting.",
-          "Watch for fractions; multiply to clear denominators."
-        ],
-        geometry:[
-          "Draw an auxiliary line if needed.",
-          "Decompose into basic shapes (rectangles/triangles).",
-          "Mark known angles/lengths and write equations."
-        ]
-      };
-      const zh = {
-        general:["检查单位与定义域","先尝试特例","画草图或数轴","带回原式验证"],
-        quadratic:["移项成标准式","能分解先分解，不行用求根公式","配方法得到顶点式","判别式判断根的类型"],
-        linear:["逐步把未知数孤立","等式两边同时操作保持平衡","遇分式可通分清理分母"],
-        geometry:["必要时作辅助线","拆成基本图形（矩形/三角形）","标注已知量并列方程"]
-      };
-      const lib = (lang==='zh')? zh : en;
-      const out = [...lib.general];
-      if (/(x\^?2|quadratic|平方|二次)/.test(q)) out.push(...lib.quadratic);
-      if (/(=|linear|一次方程|solve for)/.test(q) && !/x\^?2/.test(q)) out.push(...lib.linear);
-      if (/(area|triangle|rectangle|circle|几何|面积|角)/.test(q)) out.push(...lib.geometry);
-      return out;
-    }
-
-    /************** Tabs: lazy init for 3D + MathJax on formula **************/
-    let classic3DMounted = false;
-    document.querySelectorAll('.tabs .tab-btn').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        const wrap = btn.closest('.result-card') || btn.closest('.block');
-        const target = btn.getAttribute('data-tab');
-        wrap.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        const panel = wrap.querySelector('#'+target);
-        if(panel) panel.classList.add('active');
-
-        if(target === 'tab3d' && !neo3DMounted){ mount3D(); neo3DMounted = true; }
-        if(target === 'c3d' && !classic3DMounted){ mountClassic3D(); classic3DMounted = true; }
-        if(target === 'tabFormula' || target === 'cFormula'){ if(window.MathJax && MathJax.typeset){ MathJax.typeset(); } }
-      });
-    });
-
-    /************** 2D **************/
-    let chart;
-    function draw2DChart(q){
-      const el = document.getElementById('chart2d');
-      if(!el) return;
-      if(chart) chart.destroy();
-      // demo：如果包含 x^2，画 y=x^2，否则画 y=sin(x)
-      const xs = [], ys = [];
-      if (q && /x\^?2/.test(q.replace(/\s/g,''))) {
-        for(let x=-10; x<=10; x+=1){ xs.push(x); ys.push(x*x); }
-      } else {
-        for(let x=-10; x<=10; x+=1){ xs.push(x); ys.push(Math.sin(x)); }
-      }
-      chart = new Chart(el.getContext('2d'), {
-        type:'line',
-        data:{ labels: xs, datasets:[{ label: (/(x\^?2/.test((q||'').replace(/\s/g,'')))?'y = x^2':'y = sin(x)'), data: ys, fill:false }]},
-        options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{ title:{display:true, text:'x'}}, y:{title:{display:true, text:'y'}} } }
-      });
-    }
-
-    /************** 3D **************/
-    let threeScene, threeRenderer, threeCamera, mesh, controls;
-    function mount3D(){
-      const wrap = document.getElementById('threeContainer');
-      wrap.innerHTML='';
-      const w = wrap.clientWidth||400, h = wrap.clientHeight||300;
-      threeScene = new THREE.Scene();
-      threeCamera = new THREE.PerspectiveCamera(60, w/h, 0.1, 1000);
-      threeCamera.position.set(2,2,3);
-      threeRenderer = new THREE.WebGLRenderer({ antialias:true });
-      threeRenderer.setSize(w,h);
-      wrap.appendChild(threeRenderer.domElement);
-      controls = new THREE.OrbitControls(threeCamera, threeRenderer.domElement);
-      const light = new THREE.DirectionalLight(0xffffff, 1); light.position.set(3,3,3); threeScene.add(light);
-
-      // demo surface: z = sin(x)*cos(y)
-      const geo = new THREE.PlaneGeometry(3,3,60,60);
-      const pos = geo.attributes.position;
-      for(let i=0; i<pos.count; i++){
-        const x = pos.getX(i), y = pos.getY(i);
-        const z = Math.sin(2*x)*Math.cos(2*y)/3;
-        pos.setZ(i, z);
-      }
-      geo.computeVertexNormals();
-      const mat = new THREE.MeshStandardMaterial({ color:0x3B82F6, wireframe:false, side:THREE.DoubleSide });
-      mesh = new THREE.Mesh(geo, mat);
-      mesh.rotation.x = -Math.PI/2;
-      threeScene.add(mesh);
-
-      function animate(){ requestAnimationFrame(animate); mesh.rotation.z += 0.002; threeRenderer.render(threeScene, threeCamera); }
-      animate();
-      window.addEventListener('resize', ()=>{
-        const w2 = wrap.clientWidth, h2 = wrap.clientHeight;
-        threeCamera.aspect = w2/h2; threeCamera.updateProjectionMatrix(); threeRenderer.setSize(w2,h2);
-      });
-    }
-
-    /************** Classic demo charts **************/
-    function drawClassic2D(){
-      const el = document.getElementById('chart2dClassic'); if(!el) return;
-      const ctx = el.getContext('2d');
-      new Chart(ctx, {
-        type:'bar',
-        data:{ labels:['A','B','C'], datasets:[{ label:'Area', data:[20,15,30] }]},
-        options:{ responsive:true, maintainAspectRatio:false }
-      });
-    }
-    function mountClassic3D(){
-      const wrap = document.getElementById('threeClassic');
-      wrap.innerHTML='';
-      const w = wrap.clientWidth||400, h = wrap.clientHeight||300;
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(60, w/h, 0.1, 1000);
-      camera.position.set(2,2,3);
-      const renderer = new THREE.WebGLRenderer({ antialias:true });
-      renderer.setSize(w,h); wrap.appendChild(renderer.domElement);
-      const controls2 = new THREE.OrbitControls(camera, renderer.domElement);
-      const light = new THREE.DirectionalLight(0xffffff,1); light.position.set(2,3,4); scene.add(light);
-      const plane = new THREE.Mesh(new THREE.PlaneGeometry(2,1.2), new THREE.MeshStandardMaterial({ color:0x93C5FD, side:THREE.DoubleSide }));
-      scene.add(plane);
-      function loop(){ requestAnimationFrame(loop); plane.rotation.y += 0.005; renderer.render(scene, camera); }
-      loop();
-      window.addEventListener('resize', ()=>{
-        const w2 = wrap.clientWidth, h2 = wrap.clientHeight;
-        camera.aspect = w2/h2; camera.updateProjectionMatrix(); renderer.setSize(w2,h2);
-      });
-    }
-
-    /************** Collect & Original toggle **************/
-    document.getElementById('btnCollect').addEventListener('click', ()=>{
-      const item = { alg: document.getElementById('algTitle').innerText, t: Date.now() };
-      const fav = JSON.parse(localStorage.getItem('favorites') || '[]'); fav.push(item);
-      localStorage.setItem('favorites', JSON.stringify(fav));
-      alert((localStorage.getItem('site-lang')==='zh')?'已收藏':'Collected');
-    });
-    document.getElementById('btnZh').addEventListener('click', ()=>{
-      const zh = document.getElementById('zhText');
-      const isShow = zh.style.display === 'block';
-      zh.style.display = isShow ? 'none' : 'block';
-      document.getElementById('btnZh').innerHTML = isShow ? '<span class="en">Show Original</span><span class="zh">展开原文</span>' : '<span class="en">Hide Original</span><span class="zh">收起原文</span>';
-    });
-
-    /************** Wrongbook **************/
-    const btnWrongbook = document.getElementById('btnWrongbook');
-    btnWrongbook.addEventListener('click', ()=>{
-      const q = questionInput.value.trim() || '(empty)';
-      const a = mainAnswer.textContent || '(no answer)';
-      const list = JSON.parse(localStorage.getItem('wrongbook') || '[]');
-      list.push({ q, a, t: Date.now() });
-      localStorage.setItem('wrongbook', JSON.stringify(list));
-      alert((localStorage.getItem('site-lang')==='zh')?'已加入错题本':'Added to Wrongbook');
-    });
-    document.getElementById('btnWB2').addEventListener('click', ()=>{
-      const list = JSON.parse(localStorage.getItem('wrongbook') || '[]');
-      list.push({ q:'Challenge question', a:document.getElementById('analysis').innerText, t: Date.now() });
-      localStorage.setItem('wrongbook', JSON.stringify(list));
-      alert((localStorage.getItem('site-lang')==='zh')?'本题已加入错题本':'Saved to Wrongbook');
-    });
-
-    /************** Challenge Mode: question bank **************/
-    const qBank = {
-      easy: [
-        { en:"A rectangle is 20 by 15. Find its area.", zh:"一矩形长20宽15，求面积。", answer:"300", analysis_en:"Area = length × width = 20 × 15 = 300.", analysis_zh:"面积=长×宽=20×15=300。" },
-        { en:"Solve for x: x + 7 = 13.", zh:"解方程：x + 7 = 13。", answer:"6", analysis_en:"Subtract 7 both sides.", analysis_zh:"两边同减7。" },
-        { en:"What is 30% of 200?", zh:"200 的 30% 是多少？", answer:"60", analysis_en:"0.3 × 200 = 60.", analysis_zh:"0.3 × 200 = 60。" }
-      ],
-      mid: [
-        { en:"Solve: 2x + 3y = 12 and x - y = 1.", zh:"解联立方程：2x + 3y = 12 与 x - y = 1。", answer:"(x=3, y=2)", analysis_en:"From x-y=1 ⇒ x=y+1. Substitute into 2x+3y=12 ⇒ 2(y+1)+3y=12 ⇒ y=2; x=3.", analysis_zh:"由 x-y=1 得 x=y+1，代入 2x+3y=12 得 2(y+1)+3y=12 ⇒ y=2，x=3。" },
-        { en:"Find the slope of the line through (1,2) and (4,8).", zh:"过点 (1,2) 与 (4,8) 的直线斜率？", answer:"2", analysis_en:"(8-2)/(4-1)=6/3=2.", analysis_zh:"(8-2)/(4-1)=6/3=2。" },
-        { en:"A right triangle has legs 6 and 8. Hypotenuse?", zh:"直角三角形两直角边 6 与 8，斜边？", answer:"10", analysis_en:"c=√(6²+8²)=√100=10.", analysis_zh:"c=√(6²+8²)=√100=10。" }
-      ],
-      hard: [
-        { en:"Solve the quadratic: x² - 5x + 6 = 0.", zh:"解方程：x² - 5x + 6 = 0。", answer:"(x=2, x=3)", analysis_en:"Factor: (x-2)(x-3)=0 ⇒ x=2,3.", analysis_zh:"因式分解：(x-2)(x-3)=0 ⇒ x=2,3。" },
-        { en:"Maximize f(x)= -x² + 4x + 1.", zh:"求 f(x)= -x² + 4x + 1 的最大值。", answer:"5", analysis_en:"Vertex at x = -b/(2a)= -4/(2·-1)=2; f(2)= -4+8+1=5.", analysis_zh:"顶点 x = -b/(2a)=2；f(2)=5。" },
-        { en:"A circle has area 100π. Find its circumference.", zh:"圆面积为 100π，求周长。", answer:"20π", analysis_en:"πr²=100π ⇒ r=10 ⇒ C=2πr=20π.", analysis_zh:"πr²=100π ⇒ r=10 ⇒ 周长 2πr=20π。" }
-      ]
-    };
-    let currentDiff = 'easy';
-    let idx = 0;
-
-    const qEl = document.getElementById('challengeQuestion');
-    const ansInput = document.getElementById('ansInput');
-    const judge = document.getElementById('judge');
-    const analysis = document.getElementById('analysis');
-    const diffBtns = document.querySelectorAll('.diff-btn');
-    const diffLabel = document.getElementById('diffLabel');
-
-    function renderChallenge(){
-      const lang = localStorage.getItem('site-lang') || 'en';
-      const item = qBank[currentDiff][idx];
-      qEl.innerHTML = (lang==='zh') ? ('题目：'+item.zh) : ('Question: '+item.en);
-      judge.textContent = ''; analysis.textContent = ''; ansInput.value = '';
-      if(window.MathJax && MathJax.typeset){ MathJax.typeset(); }
-    }
-    function checkAnswer(){
-      const v = ansInput.value.trim();
-      const item = qBank[currentDiff][idx];
-      const lang = localStorage.getItem('site-lang') || 'en';
-      const ok = v.replace(/\s/g,'').toLowerCase() === item.answer.replace(/\s/g,'').toLowerCase();
-      judge.style.color = ok ? '#10B981' : '#EF4444';
-      judge.textContent = ok ? ((lang==='zh')?'正确！':'Correct!') : ((lang==='zh')?'不对，再试试～':'Incorrect, try again.');
-      analysis.innerHTML = (lang==='zh') ? ('解析：'+item.analysis_zh) : ('Analysis: '+item.analysis_en);
-    }
-    function nextQuestion(){
-      idx = (idx + 1) % qBank[currentDiff].length;
-      renderChallenge();
-    }
-    // init events
-    document.getElementById('btnAns').addEventListener('click', checkAnswer);
-    document.getElementById('btnNext').addEventListener('click', nextQuestion);
-    diffBtns.forEach(b => b.addEventListener('click', ()=>{
-      diffBtns.forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      currentDiff = b.dataset.diff;
-      const lang = localStorage.getItem('site-lang') || 'en';
-      const map = { easy:{en:'Easy',zh:'基础'}, mid:{en:'Medium',zh:'中等'}, hard:{en:'Hard',zh:'困难'} };
-      diffLabel.textContent = map[currentDiff][lang==='zh'?'zh':'en'];
-      idx = 0;
-      renderChallenge();
-    }));
-
-    // 初始渲染 challenge
-    renderChallenge();
-
-    /************** Classic burger **************/
-    const sidebar = document.getElementById('classicSidebar');
-    document.getElementById('btnBurger').addEventListener('click', ()=> sidebar.classList.toggle('open'));
   </script>
 </body>
 </html>
