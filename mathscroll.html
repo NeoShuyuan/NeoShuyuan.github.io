@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>MathScroll · Neo & Classic</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Fonts (可换成你站内的) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+  <!-- MathJax -->
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --nav-h: 60px;
+      --c-bg: #F9FAFB;
+      --c-border: #D1D5DB;
+      --c-gray: #6B7280;
+      --c-gray-light: #F3F4F6;
+      --c-deepgray: #1F2937;
+      --c-blue: #3B82F6;
+      --c-blue-dark: #2563EB;
+      --c-green: #10B981;
+      --c-red: #EF4444;
+      --c-gold: #D4A017;
+      --radius: 8px;
+      --shadow: 0 8px 24px rgba(15,23,42,.08);
+    }
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; margin:0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', 'Noto Sans', Arial, 'Noto Serif SC', serif; color:#111; background:#fff; }
+    /* 顶部导航 */
+    .topnav{
+      position:fixed; top:0; left:0; right:0; height:var(--nav-h);
+      background:#111827; color:#fff; display:flex; align-items:center; justify-content:center;
+      z-index:20;
+    }
+    .nav-inner{ width:100%; max-width:1200px; display:flex; align-items:center; justify-content:space-between; padding:0 16px; }
+    .nav-links{ display:flex; gap:20px; }
+    .nav-links a{
+      color:#fff; text-decoration:none; padding:10px 14px; border-radius:6px; transition:.2s ease;
+      font-weight:600;
+    }
+    .nav-links a:hover{ background: var(--c-blue); }
+    .brand{ font-weight:700; letter-spacing:.3px; }
+
+    /* 主体容器 */
+    .page{
+      padding-top: var(--nav-h);
+      min-height: 100vh;
+      background: var(--c-bg);
+    }
+    .main{
+      min-height: calc(100vh - var(--nav-h));
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
+    }
+    .center-wrap{
+      width:100%; max-width:1100px; margin:auto; padding:24px;
+      display:flex; flex-direction:column; align-items:center; gap:24px;
+    }
+
+    /* 模式入口按钮区（页面顶部 20% 位置） */
+    .hero-gap{ height: 20vh; }
+    .mode-buttons{
+      display:flex; gap:40px; justify-content:center; align-items:center; flex-wrap:wrap;
+    }
+    .mode-btn{
+      width:200px; height:80px; border:none; border-radius: var(--radius); font-size:20px; font-weight:700; color:#fff; cursor:pointer; transition:.2s ease; box-shadow: var(--shadow);
+    }
+    .mode-btn.neo{ background: var(--c-blue); }
+    .mode-btn.neo:hover{ transform: translateY(-2px); box-shadow: 0 12px 28px rgba(59,130,246,.35); }
+    .mode-btn.classic{ background: #6B7280; }
+    .mode-btn.classic:hover{ background: var(--c-blue); transform: translateY(-2px); }
+
+    /* 输入区 */
+    .input-row{
+      width:100%; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;
+    }
+    .text-input{
+      width:60%; max-width:600px; min-width:300px; height:50px; padding:0 16px; border:1px solid var(--c-border);
+      border-radius:6px; font-size:16px; outline:none; background:#fff;
+    }
+    .btn{
+      border:none; border-radius:6px; height:40px; padding:0 14px; color:#fff; cursor:pointer; transition:.2s ease; font-weight:600;
+    }
+    .btn.blue{ background: var(--c-blue); }
+    .btn.blue:hover{ background: var(--c-blue-dark); transform: translateY(-1px); }
+    .btn.green{ background: var(--c-green); }
+    .btn.red{ background: var(--c-red); }
+    .hint{ color: var(--c-gray); font-size:16px; text-align:center; }
+
+    /* 手写弹窗 */
+    .modal{
+      position:fixed; inset:0; background: rgba(17,24,39,.5); display:none; align-items:center; justify-content:center; z-index:50;
+    }
+    .modal .panel{
+      width: 400px; max-width: 92vw; background:#fff; border:2px solid var(--c-border); border-radius:10px; box-shadow: var(--shadow);
+      padding:12px; display:flex; flex-direction:column; gap:10px;
+    }
+    .canvas-wrap{ border:1px solid var(--c-border); border-radius:8px; overflow:hidden; background:#fff; width:100%; height:300px; }
+    .canvas-wrap canvas{ width:100%; height:100%; display:block; }
+    .row-right{ display:flex; justify-content:flex-end; gap:10px; }
+
+    /* 解题结果卡片 */
+    .result-card{
+      width:80%; max-width:800px; background:#fff; border-radius: var(--radius); box-shadow: var(--shadow);
+      padding:20px; display:none; flex-direction:column; gap:16px; margin: 8px auto;
+    }
+    .answer{ font-size:24px; font-weight:700; color: var(--c-blue); text-align:center; }
+    .tabs{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .tab-btn{
+      width:100px; height:40px; border-radius:6px; border:1px solid var(--c-border); background:#E5E7EB; cursor:pointer; font-weight:600;
+    }
+    .tab-btn.active{ background: var(--c-blue); color:#fff; border-color: transparent; }
+    .tab-panels{ border:1px solid var(--c-border); border-radius:8px; padding:16px; min-height: 320px; background:#fff; }
+    .panel{ display:none; }
+    .panel.active{ display:block; }
+    .canvas-2d, .canvas-3d{ width:400px; height:300px; max-width:100%; margin: 0 auto; }
+    .suggest{ max-height:200px; overflow:auto; color:#374151; line-height:1.7; }
+    .wrongbook{ width:150px; height:40px; background: var(--c-red); color:#fff; border:none; border-radius:6px; font-weight:700; margin: 0 auto; display:block; }
+
+    /* Classic Mode 布局 */
+    .classic-wrap{ display:none; width:100%; gap:0; }
+    .classic-container{
+      display:flex; width:100%; min-height: calc(100vh - var(--nav-h));
+    }
+    .classic-sidebar{
+      position:sticky; top: var(--nav-h);
+      width:25%; min-width:260px; background: var(--c-gray-light);
+      border-right:1px solid var(--c-border);
+      height: calc(100vh - var(--nav-h)); padding:16px; overflow:auto;
+    }
+    .classic-main{
+      width:75%; padding:24px; background: var(--c-bg); min-height: calc(100vh - var(--nav-h));
+    }
+    .sec-title{ font-size:18px; font-weight:700; margin: 12px 0; }
+    details{ background:#fff; border:1px solid var(--c-border); border-radius:8px; padding:8px 12px; margin-bottom:10px; }
+    summary{ cursor:pointer; font-weight:700; }
+    .alg-list a{
+      display:block; padding:8px 10px; border-radius:6px; color:#374151; text-decoration:none; margin:6px 0;
+    }
+    .alg-list a:hover{ background: #E5E7EB; }
+    .alg-list a.active{ background: var(--c-blue); color:#fff; }
+    .diff-col{ margin-top:16px; display:flex; flex-direction:column; gap:10px; }
+    .diff-btn{
+      height:50px; width:100%; border:none; border-radius:6px; background:#9CA3AF; color:#fff; font-weight:700; cursor:pointer; transition:.2s; 
+    }
+    .diff-btn:hover{ box-shadow: var(--shadow); }
+    .diff-btn.active{ background: var(--c-blue); }
+
+    /* 右侧内容区 */
+    .alg-header{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+    .alg-title{ font-size:24px; font-weight:700; }
+    .alg-intro{ color: var(--c-gray); font-size:16px; }
+    .block{ background:#fff; border:1px solid var(--c-border); border-radius:8px; padding:16px; margin:14px 0; }
+    .zh-btn{ background: var(--c-blue); color:#fff; border:none; border-radius:6px; height:36px; padding:0 12px; }
+    .zh-text{ font-family: 'Noto Serif SC', serif; font-size:18px; display:none; margin-top:8px; }
+    .en-text{ font-size:16px; }
+    .easy-text{ color: var(--c-gray); font-size:14px; line-height:1.5; }
+    .collect-btn{ width:120px; height:40px; background: var(--c-gold); border:none; border-radius:6px; color:#111; font-weight:700; }
+    .challenge-title{ font-size:20px; font-weight:700; }
+    .answer-row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .ans-input{ width:60%; max-width:600px; min-width:260px; height:50px; border:1px solid var(--c-border); border-radius:6px; padding:0 12px; }
+    .next-btn{ width:120px; height:40px; background: var(--c-blue); color:#fff; border:none; border-radius:6px; }
+    .analysis{ margin-top:10px; line-height:1.7; }
+
+    /* 移动端适配 */
+    @media (max-width: 768px){
+      .text-input{ width:90%; }
+      .classic-sidebar{ position:fixed; left:0; top:var(--nav-h); transform:translateX(-100%); transition:.25s ease; z-index:30; }
+      .classic-sidebar.open{ transform:translateX(0); }
+      .burger{ display:inline-flex !important; }
+      .classic-main{ width:100%; padding-top: 8px; }
+      .mode-btn{ width: min(200px, 45vw); height:72px; }
+    }
+    .burger{ display:none; background: var(--c-blue); color:#fff; border:none; border-radius:6px; height:36px; padding:0 12px; }
+  </style>
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <nav class="topnav">
+    <div class="nav-inner">
+      <div class="brand">NeoShuyuan</div>
+      <div class="nav-links">
+        <a href="#">MathScroll</a>
+        <a href="#">Classics Studio</a>
+        <a href="#">Scholar’s Cache</a>
+        <a href="#">About the Weaver</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <!-- MathScroll 主区（单页：包含 Neo / Classic 两套） -->
+    <section class="main">
+      <div class="center-wrap">
+
+        <!-- 顶部 20% 空间，用于视觉定位 -->
+        <div class="hero-gap"></div>
+
+        <!-- 模式入口按钮区 -->
+        <div class="mode-buttons" id="modeButtons">
+          <button class="mode-btn neo" id="btnNeo">Neo Mode</button>
+          <button class="mode-btn classic" id="btnClassic">Classic Mode</button>
+        </div>
+
+        <!-- Neo Mode：输入区 -->
+        <div id="neoWrap" style="display:none; width:100%;">
+          <div class="input-row">
+            <input id="questionInput" class="text-input" placeholder="Try: Solve 2x²+3x+1=0" />
+            <button class="btn blue" id="btnHand">手写输入</button>
+            <button class="btn green" id="btnSubmit">提交</button>
+          </div>
+          <div class="hint">支持英文 / 中文 / LaTeX。示例：integrate x^2 dx；求解 x^2+3x+2=0；\\(\\int_0^1 x^2\\,dx\\)</div>
+
+          <!-- 结果卡片 -->
+          <div class="result-card" id="resultCard">
+            <div class="answer" id="mainAnswer">—</div>
+            <div class="tabs">
+              <button class="tab-btn active" data-tab="tab2d">2D</button>
+              <button class="tab-btn" data-tab="tab3d">3D</button>
+              <button class="tab-btn" data-tab="tabFormula">Formula</button>
+              <button class="tab-btn" data-tab="tabSuggest">Suggestion</button>
+            </div>
+            <div class="tab-panels">
+              <div class="panel active" id="tab2d">
+                <canvas id="chart2d" class="canvas-2d"></canvas>
+              </div>
+              <div class="panel" id="tab3d">
+                <div id="threeContainer" class="canvas-3d"></div>
+              </div>
+              <div class="panel" id="tabFormula">
+                <!-- 使用 details/summary 折叠步骤 -->
+                <details open>
+                  <summary>Step 1</summary>
+                  <div>识别题型与已知条件，转为标准表达式。</div>
+                </details>
+                <details>
+                  <summary>Step 2</summary>
+                  <div>代入公式或运算规则，进行化简与推导。</div>
+                </details>
+                <details>
+                  <summary>Step 3</summary>
+                  <div>得到解并进行校验。比如：$x^2+3x+2=0 \\Rightarrow (x+1)(x+2)=0$，解为 $x=-1,-2$。</div>
+                </details>
+              </div>
+              <div class="panel" id="tabSuggest">
+                <div class="suggest" id="suggestBox">
+                  · 你可以尝试将本题在“盈不足”视角下理解其平衡思想（对应《九章算术》相关算法）。<br/>
+                  · 进一步挑战：将参数化后观察函数的顶点与开口方向。<br/>
+                  · 推荐阅读：《九章算术》卷一-方田、卷七-盈不足的相关问题。<br/>
+                </div>
+              </div>
+            </div>
+            <button class="wrongbook" id="btnWrongbook">Add to Wrongbook</button>
+          </div>
+        </div>
+
+        <!-- Classic Mode：左右分栏 -->
+        <div id="classicWrap" class="classic-wrap">
+          <div class="classic-container">
+            <!-- 左侧导航（移动端可折叠） -->
+            <aside class="classic-sidebar" id="classicSidebar">
+              <div class="sec-title">Learn Algorithms</div>
+              <details open>
+                <summary>卷一 · 方田</summary>
+                <div class="alg-list">
+                  <a href="#" data-alg="square-field" class="active">田亩面积折算</a>
+                  <a href="#" data-alg="rect-split">矩形分割</a>
+                </div>
+              </details>
+              <details>
+                <summary>卷七 · 盈不足</summary>
+                <div class="alg-list">
+                  <a href="#" data-alg="excess-deficiency">盈不足法</a>
+                </div>
+              </details>
+
+              <div class="sec-title" style="margin-top:18px;">Challenge Mode</div>
+              <div class="diff-col">
+                <button class="diff-btn active" data-diff="easy">基础</button>
+                <button class="diff-btn" data-diff="mid">中等</button>
+                <button class="diff-btn" data-diff="hard">困难</button>
+              </div>
+            </aside>
+
+            <!-- 右侧内容 -->
+            <section class="classic-main">
+              <button class="burger" id="btnBurger">目录</button>
+
+              <!-- 学习区 -->
+              <div class="block">
+                <div class="alg-header">
+                  <div>
+                    <div class="alg-title" id="algTitle">田亩面积折算</div>
+                    <div class="alg-intro" id="algIntro">Convert and compute farmland area using ancient rules and modern algebra.</div>
+                  </div>
+                  <button class="collect-btn" id="btnCollect">收藏</button>
+                </div>
+                <div class="block">
+                  <button class="zh-btn" id="btnZh">展开原文</button>
+                  <div class="zh-text" id="zhText">原文：今有田亩……（示例原文占位）</div>
+                  <div class="en-text" style="margin-top:10px;">English: Given a field with dimensions..., compute its area and convert among units.</div>
+                  <div class="easy-text" style="margin-top:10px;">Plain English: Explain how to translate ancient unit rules into modern area formulas with examples.</div>
+                </div>
+
+                <!-- 示例题 Tabs，与 Neo Mode 同构 -->
+                <div class="block">
+                  <div class="tabs">
+                    <button class="tab-btn active" data-tab="c2d">2D</button>
+                    <button class="tab-btn" data-tab="c3d">3D</button>
+                    <button class="tab-btn" data-tab="cFormula">Formula</button>
+                    <button class="tab-btn" data-tab="cSuggest">Suggestion</button>
+                  </div>
+                  <div class="tab-panels">
+                    <div class="panel active" id="c2d">
+                      <canvas id="chart2dClassic" class="canvas-2d"></canvas>
+                    </div>
+                    <div class="panel" id="c3d"><div id="threeClassic" class="canvas-3d"></div></div>
+                    <div class="panel" id="cFormula">
+                      <details open><summary>Step 1</summary>以古制单位转化为现代米制。</details>
+                      <details><summary>Step 2</summary>计算矩形/复合图形面积。</details>
+                      <details><summary>Step 3</summary>校验数值并讨论误差来源。</details>
+                    </div>
+                    <div class="panel" id="cSuggest">
+                      <div class="suggest">建议：尝试将不规则田块分割成若干矩形或三角形再求和；对比古制“步、亩”的折算关系。</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 挑战区 -->
+              <div class="block">
+                <div class="challenge-title">挑战题（当前难度：<span id="diffLabel">基础</span>）</div>
+                <div style="margin-top:8px;">题目：已知一块田的长为 20 与宽为 15（单位可视为步），求其面积。</div>
+                <div class="answer-row" style="margin-top:10px;">
+                  <input class="ans-input" id="ansInput" placeholder="输入你的答案…" />
+                  <button class="btn green" id="btnAns">提交</button>
+                </div>
+                <div id="judge" style="margin-top:10px; font-weight:700;"></div>
+                <div class="analysis" id="analysis"></div>
+                <div style="margin-top:10px; display:flex; gap:10px;">
+                  <button class="next-btn" id="btnNext">下一题</button>
+                  <button class="btn red" id="btnWB2">Add to Wrongbook</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- 手写输入弹窗 -->
+  <div class="modal" id="handModal">
+    <div class="panel">
+      <div style="font-weight:700;">手写输入</div>
+      <div class="canvas-wrap"><canvas id="handCanvas"></canvas></div>
+      <div class="row-right">
+        <button class="btn red" id="btnClear">清除</button>
+        <button class="btn green" id="btnConfirm">确认</button>
+        <button class="btn" style="background:#9CA3AF;color:#fff;" id="btnClose">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ------- 顶部模式按钮 -------
+    const btnNeo = document.getElementById('btnNeo');
+    const btnClassic = document.getElementById('btnClassic');
+    const neoWrap = document.getElementById('neoWrap');
+    const classicWrap = document.getElementById('classicWrap');
+    const modeButtons = document.getElementById('modeButtons');
+
+    function showNeo(){
+      neoWrap.style.display = 'block';
+      classicWrap.style.display = 'none';
+      document.querySelector('.hero-gap').style.display = 'block';
+      modeButtons.style.display = 'flex';
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function showClassic(){
+      neoWrap.style.display = 'none';
+      classicWrap.style.display = 'block';
+      document.querySelector('.hero-gap').style.display = 'block';
+      modeButtons.style.display = 'flex';
+      window.scrollTo({top:0, behavior:'smooth'});
+      // 在 classic 初次展示时绘图占位
+      setTimeout(() => {
+        drawClassic2D();
+        mountClassic3D();
+      }, 50);
+    }
+    btnNeo.addEventListener('click', showNeo);
+    btnClassic.addEventListener('click', showClassic);
+
+    // ------- 手写弹窗与 Canvas -------
+    const handModal = document.getElementById('handModal');
+    const btnHand = document.getElementById('btnHand');
+    const btnClear = document.getElementById('btnClear');
+    const btnConfirm = document.getElementById('btnConfirm');
+    const btnClose = document.getElementById('btnClose');
+    const handCanvas = document.getElementById('handCanvas');
+    const hc = handCanvas.getContext('2d');
+    let drawing = false;
+    function resizeHand(){
+      const wrap = document.querySelector('.canvas-wrap');
+      handCanvas.width = wrap.clientWidth;
+      handCanvas.height = wrap.clientHeight;
+      hc.fillStyle = '#fff'; hc.fillRect(0,0,handCanvas.width, handCanvas.height);
+    }
+    btnHand.addEventListener('click', () => { handModal.style.display = 'flex'; resizeHand(); });
+    btnClose.addEventListener('click', () => handModal.style.display = 'none');
+    btnClear.addEventListener('click', () => { hc.clearRect(0,0,handCanvas.width, handCanvas.height); hc.fillStyle='#fff'; hc.fillRect(0,0,handCanvas.width, handCanvas.height); });
+    btnConfirm.addEventListener('click', () => { handModal.style.display='none'; alert('手写内容已录入（示例，不含识别）。'); });
+
+    handCanvas.addEventListener('mousedown', e => { drawing=true; hc.strokeStyle='#111'; hc.lineWidth=3; hc.lineCap='round'; hc.beginPath(); hc.moveTo(e.offsetX, e.offsetY); });
+    handCanvas.addEventListener('mousemove', e => { if(!drawing) return; hc.lineTo(e.offsetX, e.offsetY); hc.stroke(); });
+    ['mouseup','mouseleave'].forEach(ev => handCanvas.addEventListener(ev, () => drawing=false));
+
+    // ------- Neo Mode 提交与结果 -------
+    const btnSubmit = document.getElementById('btnSubmit');
+    const resultCard = document.getElementById('resultCard');
+    const mainAnswer = document.getElementById('mainAnswer');
+    const questionInput = document.getElementById('questionInput');
+
+    btnSubmit.addEventListener('click', () => {
+      const q = questionInput.value.trim();
+      if(!q){ alert('请输入题目'); return; }
+      // 示例：直接给出占位答案，可接入你的 AI API
+      let ansText = '答案：示例占位。若为 x²+3x+2=0，则 x=-1, -2';
+      if (/x\^?2\+3x\+2=0/.test(q.replace(/\s/g,''))) { ansText = '答案：x = -1, -2'; }
+      mainAnswer.textContent = ansText;
+      resultCard.style.display = 'flex';
+      // 动态绘制 2D 与 3D
+      draw2DChart();
+      mount3D();
+      // 刷新 MathJax（如有 LaTeX）
+      if(window.MathJax && MathJax.typeset){ MathJax.typeset(); }
+      window.scrollTo({ top: resultCard.offsetTop - 80, behavior: 'smooth' });
+    });
+
+    // ------- Tabs 切换（Neo） -------
+    document.querySelectorAll('.tabs .tab-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const group = btn.closest('.result-card') ? '' : 'classic';
+        const container = group ? document.querySelector('.classic-main') : document;
+        btn.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const target = btn.getAttribute('data-tab');
+        const wrap = btn.closest('.result-card') || btn.closest('.block');
+        wrap.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        wrap.querySelector('#'+target).classList.add('active');
+      });
+    });
+
+    // ------- 2D：Chart.js 示例 -------
+    let chart;
+    function draw2DChart(){
+      const el = document.getElementById('chart2d');
+      if(chart) chart.destroy();
+      const xs = [], ys = [];
+      for(let x=-10; x<=10; x+=1){ xs.push(x); ys.push(x*x); }
+      chart = new Chart(el.getContext('2d'), {
+        type:'line',
+        data:{ labels: xs, datasets:[{ label:'y = x^2', data: ys, fill:false }]},
+        options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{ title:{display:true, text:'x'}}, y:{title:{display:true, text:'y'}} } }
+      });
+    }
+
+    // ------- 3D：Three.js 示例 -------
+    let threeScene, threeRenderer, threeCamera, cube, controls;
+    function mount3D(){
+      const wrap = document.getElementById('threeContainer');
+      wrap.innerHTML='';
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      threeScene = new THREE.Scene();
+      threeCamera = new THREE.PerspectiveCamera(60, w/h, 0.1, 1000);
+      threeCamera.position.set(2,2,3);
+      threeRenderer = new THREE.WebGLRenderer({ antialias:true });
+      threeRenderer.setSize(w,h);
+      wrap.appendChild(threeRenderer.domElement);
+      controls = new THREE.OrbitControls(threeCamera, threeRenderer.domElement);
+      const light = new THREE.DirectionalLight(0xffffff, 1); light.position.set(3,3,3); threeScene.add(light);
+      const geo = new THREE.BoxGeometry(1,1,1);
+      const mat = new THREE.MeshStandardMaterial({ color: 0x3B82F6 });
+      cube = new THREE.Mesh(geo, mat);
+      threeScene.add(cube);
+      function animate(){ requestAnimationFrame(animate); cube.rotation.y += 0.01; threeRenderer.render(threeScene, threeCamera); }
+      animate();
+      window.addEventListener('resize', ()=>{
+        const w2 = wrap.clientWidth, h2 = wrap.clientHeight;
+        threeCamera.aspect = w2/h2; threeCamera.updateProjectionMatrix(); threeRenderer.setSize(w2,h2);
+      });
+    }
+
+    // ------- 错题本 本地存储示例 -------
+    const btnWrongbook = document.getElementById('btnWrongbook');
+    btnWrongbook.addEventListener('click', ()=>{
+      const q = questionInput.value.trim() || '(未填写题目)';
+      const a = mainAnswer.textContent || '(无答案)';
+      const list = JSON.parse(localStorage.getItem('wrongbook') || '[]');
+      list.push({ q, a, t: Date.now() });
+      localStorage.setItem('wrongbook', JSON.stringify(list));
+      alert('已加入错题本（示例，实际站点可写入用户账户）');
+    });
+
+    // ------- Classic：目录交互 & Tabs & 收藏 -------
+    document.getElementById('btnZh').addEventListener('click', ()=>{
+      const zh = document.getElementById('zhText');
+      const isShow = zh.style.display === 'block';
+      zh.style.display = isShow ? 'none' : 'block';
+      document.getElementById('btnZh').textContent = isShow ? '展开原文' : '收起原文';
+    });
+
+    // Classic 内部 tabs（和上面公用监听，但需初始化绘图）
+    function drawClassic2D(){
+      const el = document.getElementById('chart2dClassic');
+      if(!el) return;
+      const ctx = el.getContext('2d');
+      new Chart(ctx, {
+        type:'bar',
+        data:{ labels:['A','B','C'], datasets:[{ label:'Area', data:[20,15,30] }]},
+        options:{ responsive:true, maintainAspectRatio:false }
+      });
+    }
+    function mountClassic3D(){
+      const wrap = document.getElementById('threeClassic');
+      wrap.innerHTML='';
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, w/h, 0.1, 1000);
+      camera.position.set(2,2,3);
+      const renderer = new THREE.WebGLRenderer({ antialias:true });
+      renderer.setSize(w,h); wrap.appendChild(renderer.domElement);
+      const controls2 = new THREE.OrbitControls(camera, renderer.domElement);
+      const light = new THREE.DirectionalLight(0xffffff,1); light.position.set(2,3,4); scene.add(light);
+      const plane = new THREE.Mesh(new THREE.PlaneGeometry(2,1.2), new THREE.MeshStandardMaterial({ color:0x93C5FD, side:THREE.DoubleSide }));
+      scene.add(plane);
+      function loop(){ requestAnimationFrame(loop); plane.rotation.y += 0.005; renderer.render(scene, camera); }
+      loop();
+      window.addEventListener('resize', ()=>{
+        const w2 = wrap.clientWidth, h2 = wrap.clientHeight;
+        camera.aspect = w2/h2; camera.updateProjectionMatrix(); renderer.setSize(w2,h2);
+      });
+    }
+
+    document.getElementById('btnCollect').addEventListener('click', ()=>{
+      const item = { alg: document.getElementById('algTitle').textContent, t: Date.now() };
+      const fav = JSON.parse(localStorage.getItem('favorites') || '[]'); fav.push(item);
+      localStorage.setItem('favorites', JSON.stringify(fav));
+      alert('已收藏');
+    });
+
+    // ------- Classic：挑战题提交 -------
+    const btnAns = document.getElementById('btnAns');
+    const ansInput = document.getElementById('ansInput');
+    const judge = document.getElementById('judge');
+    const analysis = document.getElementById('analysis');
+    btnAns.addEventListener('click', ()=>{
+      const v = ansInput.value.trim();
+      const correct = '300'; // 20 * 15 = 300 （示例）
+      if(v === correct){
+        judge.style.color = '#10B981';
+        judge.textContent = '正确！';
+      }else{
+        judge.style.color = '#EF4444';
+        judge.textContent = '错误，再想想～';
+      }
+      analysis.innerHTML = '解析：矩形面积 = 长 × 宽，因此 20 × 15 = 300。';
+      if(window.MathJax && MathJax.typeset){ MathJax.typeset(); }
+    });
+    document.getElementById('btnNext').addEventListener('click', ()=>{
+      ansInput.value=''; judge.textContent=''; analysis.textContent='';
+      alert('示例：下一题占位（可接后台题库）。');
+    });
+    document.getElementById('btnWB2').addEventListener('click', ()=>{
+      const list = JSON.parse(localStorage.getItem('wrongbook') || '[]');
+      list.push({ q:'田面积求解（示例题）', a:'正确答案：300', t: Date.now() });
+      localStorage.setItem('wrongbook', JSON.stringify(list));
+      alert('本题已加入错题本');
+    });
+
+    // ------- Classic：难度切换 & 汉堡目录 -------
+    const diffBtns = document.querySelectorAll('.diff-btn');
+    const diffLabel = document.getElementById('diffLabel');
+    diffBtns.forEach(b => b.addEventListener('click', ()=>{
+      diffBtns.forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      diffLabel.textContent = b.dataset.diff === 'easy' ? '基础' : b.dataset.diff === 'mid' ? '中等' : '困难';
+    }));
+    const sidebar = document.getElementById('classicSidebar');
+    document.getElementById('btnBurger').addEventListener('click', ()=> sidebar.classList.toggle('open'));
+
+    // ------- 初始进入：展示入口按钮，等待用户选择 -------
+    // 可选：默认展示 Neo
+    // showNeo();
+  </script>
+</body>
+</html>
